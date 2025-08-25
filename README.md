@@ -1,61 +1,71 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 土豆食堂 (Potato Canteen)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**内部开发代号:** Lynx (玲可)
 
-## About Laravel
+## 项目介绍
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+土豆食堂开门了嗷~
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+一款王主理人全栈开发维护，仅服务于马女士的数字化干饭管理系统。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 功能列表
 
-## Learning Laravel
+### 1. 用户管理
+- **微信小程序登录**: 通过微信小程序授权登录，获取手机号、昵称进行快捷注册。
+- **角色认证**: 注册用户需提交申请，由后台认证通过后成为“干饭人”，获得完整权限。游客仅能浏览。
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. 组织管理
+- **干饭人**: 系统的主要用户，负责点单、干饭和评价。
+- **主理人**: 系统管理员，负责菜单维护、买菜备菜、烹饪上菜、许愿池受理、干饭计划维护及系统基础信息维护。
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. 分类管理 (菜单与物料)
+- 支持无限层级的分类管理，每个分类包含：
+  - 标题
+  - 副标题
+  - 排序
+  - 父节点
+  - 是否显示
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. 菜单管理
+- **分类**: 菜单可归属多个分类。
+- **内容**: 包括图片、标题、副标题。
+- **物料关联**:
+  - 关联物料 ID
+  - 指定数量
+  - 标记是否为必须物料
+- **详情**: 支持 Markdown 格式的图文正文。
+- **统计与评价**:
+  - 点单次数
+  - 浏览次数
+  - 综合评分
+  - 关联评论
 
-## Laravel Sponsors
+### 5. 点单管理
+- **移动端点单**: 用户可在手机上发起点单，选择菜品并备注口味信息。
+- **订单跟踪**: 下单后，主理人会收到通知。用户可对订单进行增、改、删操作，主理人将同步接收提醒。
+- **完工与评价**: 主理人烹饪完成后，上传完工信息（文字+图片）。“干饭人”可对本次点单进行评价（评分、留言、拍照）。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. 许愿池
+- 用户可以通过“文本+图片”的方式创建想吃的菜品。
+- 主理人审核并实现许愿后，会将其关联到正式菜单中，并标记为“已实现”。
 
-### Premium Partners
+### 7. 评价管理
+- 用户可以对吃过的菜单进行评价。
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 8. 干饭计划
+- **每日菜单**: 集中展示食堂每日规划的菜单，方便用户查看。
+- **点单记录**: 用户的点单记录会自动加入计划，重复菜品只显示最新修改的内容。
+- **计划制定**: 计划内容可由用户自行下单产生，也可由主理人预先设定。
 
-## Contributing
+### 9. 备菜清单
+- **智能生成**: 根据“干饭计划”中的菜单，自动生成所需物料清单，方便检查和采购。
+- **自定义筛选**: 可按需筛选物料，并查看物料被哪些菜单所使用。
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 10. 物料管理
+- 建立常用瓜果蔬菜、油盐酱醋的资料库，方便菜单选择使用。物料信息包括：
+  - 照片
+  - 名称
+  - 别名
+  - 单位（支持多种描述，如“6斤螃蟹”、“10只螃蟹”）
+  - 描述
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
