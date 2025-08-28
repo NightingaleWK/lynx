@@ -6,7 +6,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class UsersTable
@@ -21,14 +23,19 @@ class UsersTable
                 TextColumn::make('email')
                     ->label(__('user.email'))
                     ->searchable(),
+                ToggleColumn::make('is_active')
+                    ->label(__('user.is_active'))
+                    ->onColor('success')
+                    ->onIcon(Heroicon::Check)
+                    ->offIcon(Heroicon::XMark),
                 TextColumn::make('created_at')
                     ->label(__('user.created_at'))
-                    ->dateTime()
+                    ->dateTime('Y-m-d H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->label(__('user.updated_at'))
-                    ->dateTime()
+                    ->dateTime('Y-m-d H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

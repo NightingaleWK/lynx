@@ -10,8 +10,9 @@ return [
     'email' => '邮箱',
     'email_verified_at' => '邮箱验证时间',
     'password' => '密码',
-    'password_edit_placeholder' => '留空则密码保持原样，填入信息后将修改当前密码',
+    'password_edit_placeholder' => '留空则不修改，填入后修改当前密码',
     'remember_token' => '记住令牌',
+    'is_active' => '是否激活',
     'created_at' => '创建时间',
     'updated_at' => '更新时间',
 ];
