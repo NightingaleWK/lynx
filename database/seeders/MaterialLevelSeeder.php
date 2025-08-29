@@ -73,7 +73,7 @@ class MaterialLevelSeeder extends Seeder
         ];
 
         // 清空现有数据（可选）
-        DB::table('material_levels')->truncate();
+        DB::table('material_levels')->delete();
 
         // 插入预设物料分类数据
         DB::table('material_levels')->insert($categories);

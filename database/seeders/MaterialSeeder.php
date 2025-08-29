@@ -32,5 +32,8 @@ class MaterialSeeder extends Seeder
             'alias' => '番茄',
             'description' => '西红柿无疑是人人喜爱的蔬菜。它易于栽种，抗病虫害能力强，品种多且产量大。',
         ]);
+
+        // 使用 factory 生成10个随机材料
+        Material::factory(10)->create();
     }
 }

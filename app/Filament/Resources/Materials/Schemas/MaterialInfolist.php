@@ -42,6 +42,18 @@ class MaterialInfolist
                         '2xl' => 1,
                     ]),
 
+                TextEntry::make('materialLevel.name')
+                    ->label(__('material.material_level'))
+                    ->badge()
+                    ->placeholder('未分类')
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
+
                 TextEntry::make('units.name')
                     ->label('关联单位')
                     ->getStateUsing(fn($record) => $record->units->pluck('name')->join(','))

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Materials\Schemas;
 
+use App\Models\MaterialLevel;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -46,6 +47,20 @@ class MaterialForm
                     ->maxLength(255)
                     ->placeholder(__('material.alias'))
                     ->columnSpan(1)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
+
+                Select::make('material_level_id')
+                    ->label(__('material.material_level'))
+                    ->options(MaterialLevel::visible()->ordered()->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->placeholder(__('material.select_material_level'))
                     ->columnSpan([
                         'sm' => 1,
                         'md' => 1,

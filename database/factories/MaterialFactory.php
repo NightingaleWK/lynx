@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Material;
+use App\Models\MaterialLevel;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,10 +20,23 @@ class MaterialFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(['卷心菜', '辣椒', '西红柿', '土豆', '胡萝卜', '洋葱', '大蒜', '生姜', '白菜', '菠菜']),
-            'en_name' => fake()->randomElement(['cabbage', 'pepper', 'tomato', 'potato', 'carrot', 'onion', 'garlic', 'ginger', 'lettuce', 'spinach']),
-            'alias' => fake()->optional()->sentence(2),
-            'description' => fake()->paragraph(2),
+            'name' => fake()->word(),
+            'en_name' => fake()->optional()->word(),
+            'alias' => fake()->optional()->word(),
+            'description' => fake()->optional()->paragraph(2),
+            'material_level_id' => MaterialLevel::factory(),
         ];
+    }
+
+    /**
+     * 配置模型创建后的回调
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Material $material) {
+            // 随机关联 2-4 个单位
+            $units = Unit::inRandomOrder()->take(fake()->numberBetween(1, 2))->get();
+            $material->units()->attach($units);
+        });
     }
 }

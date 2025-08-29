@@ -32,6 +32,13 @@ class MaterialsTable
                     ->limit(30)
                     ->placeholder('无'),
 
+                TextColumn::make('materialLevel.name')
+                    ->label(__('material.material_level'))
+                    ->badge()
+                    ->searchable()
+                    ->limit(20)
+                    ->placeholder('无'),
+
                 TextColumn::make('units.name')
                     ->label('关联单位')
                     ->badge()

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('en_name')->nullable()->comment('英文缩写');
             $table->string('alias')->nullable()->comment('别名');
             $table->text('description')->nullable()->comment('描述');
+            $table->foreignId('material_level_id')->nullable()->constrained('material_levels')->onDelete('set null')->comment('物料分类ID');
             $table->timestamps();
 
             $table->comment('物料表');
