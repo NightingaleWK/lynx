@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('material_levels', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('物料分类名称');
+            $table->string('name')->comment('分类名称');
             $table->unsignedInteger('sort_order')->default(0)->comment('排序权重。数值越大越靠前');
             $table->boolean('is_visible')->default(true)->comment('是否显示');
             $table->timestamps();

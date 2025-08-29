@@ -40,7 +40,7 @@ class MaterialsTable
                     ->placeholder('无'),
 
                 TextColumn::make('units.name')
-                    ->label('关联单位')
+                    ->label('单位')
                     ->badge()
                     ->separator(',')
                     ->searchable()

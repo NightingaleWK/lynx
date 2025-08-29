@@ -70,7 +70,7 @@ class MaterialForm
                     ]),
 
                 Select::make('units')
-                    ->label('关联单位')
+                    ->label('单位')
                     ->relationship(titleAttribute: 'name')
                     ->searchable()
                     ->preload()

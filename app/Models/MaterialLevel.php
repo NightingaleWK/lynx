@@ -44,7 +44,7 @@ class MaterialLevel extends Model
     }
 
     /**
-     * 只显示可见的物料分类
+     * 只显示可见的分类
      */
     public function scopeVisible($query)
     {

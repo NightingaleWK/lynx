@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'label' => '物料分类',
+    'label' => '分类',
 
-    'id'         => '物料分类ID',
+    'id'         => '分类ID',
     'name'       => '名称',
     'sort_order' => '排序',
     'is_visible' => '是否显示',

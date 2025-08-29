@@ -23,7 +23,7 @@ class Material extends Model
     ];
 
     /**
-     * 与物料分类的关联
+     * 与分类的关联
      */
     public function materialLevel(): BelongsTo
     {

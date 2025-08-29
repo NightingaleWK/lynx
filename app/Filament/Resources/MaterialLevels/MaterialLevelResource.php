@@ -15,14 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class MaterialLevelResource extends Resource
 {
     protected static ?string $model = MaterialLevel::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static string | UnitEnum | null $navigationGroup = '物料管理';
+
+    protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string
     {

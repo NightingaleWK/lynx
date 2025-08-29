@@ -55,7 +55,7 @@ class MaterialInfolist
                     ]),
 
                 TextEntry::make('units.name')
-                    ->label('关联单位')
+                    ->label('单位')
                     ->getStateUsing(fn($record) => $record->units->pluck('name')->join(','))
                     ->badge()
                     ->separator(',')
