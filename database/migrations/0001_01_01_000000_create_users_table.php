@@ -20,12 +20,16 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->comment('用户表');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
+
+            $table->comment('密码重置令牌表');
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -35,6 +39,8 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+
+            $table->comment('会话表');
         });
     }
 
