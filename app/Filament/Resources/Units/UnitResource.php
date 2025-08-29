@@ -20,7 +20,7 @@ class UnitResource extends Resource
 {
     protected static ?string $model = Unit::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedScale;
 
     protected static ?string $recordTitleAttribute = 'name';
 

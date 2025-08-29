@@ -29,14 +29,20 @@ class UnitForm
                     ->label(__('unit.remark'))
                     ->rows(3)
                     ->placeholder(__('unit.remark'))
-                    ->columnSpanFull(),
+                    ->columnSpan([
+                        'sm' => 2,
+                        'md' => 2,
+                        'lg' => 2,
+                        'xl' => 2,
+                        '2xl' => 2,
+                    ]),
             ])
             ->columns([
                 'sm' => 2,
                 'md' => 2,
-                'lg' => 6,
-                'xl' => 6,
-                '2xl' => 6,
+                'lg' => 2,
+                'xl' => 2,
+                '2xl' => 2,
             ]);
     }
 }

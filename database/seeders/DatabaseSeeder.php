@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UnitSeeder::class,
             MaterialSeeder::class,
+            MaterialLevelSeeder::class,
         ]);
     }
 }

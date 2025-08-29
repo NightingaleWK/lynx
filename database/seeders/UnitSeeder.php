@@ -15,49 +15,49 @@ class UnitSeeder extends Seeder
         Unit::factory()->create([
             'name' => '个',
             'en_name' => 'pcs',
-            'remark' => '个',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '箱',
             'en_name' => 'box',
-            'remark' => '箱',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '件',
             'en_name' => 'pcs',
-            'remark' => '件',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '套',
             'en_name' => 'pcs',
-            'remark' => '套',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '条',
             'en_name' => 'pcs',
-            'remark' => '条',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '包',
             'en_name' => 'pcs',
-            'remark' => '包',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '卷',
             'en_name' => 'pcs',
-            'remark' => '卷',
+            'remark' => '',
         ]);
 
         Unit::factory()->create([
             'name' => '盘',
             'en_name' => 'pcs',
-            'remark' => '盘',
+            'remark' => '',
         ]);
     }
 }

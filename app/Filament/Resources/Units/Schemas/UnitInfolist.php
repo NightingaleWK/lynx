@@ -12,47 +12,66 @@ class UnitInfolist
     {
         return $schema
             ->components([
-                Fieldset::make(__('unit.label'))
+                TextEntry::make('name')
+                    ->label(__('unit.name'))
                     ->columnSpan([
-                        'sm' => 2,
-                        'md' => 2,
-                        'lg' => 2,
-                        'xl' => 2,
-                        '2xl' => 2,
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
+
+                TextEntry::make('en_name')
+                    ->label(__('unit.en_name'))
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
+
+                TextEntry::make('remark')
+                    ->label(__('unit.remark'))
+                    ->markdown()
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
                     ])
-                    ->columns([
-                        'sm' => 2,
-                        'md' => 2,
-                        'lg' => 2,
-                        'xl' => 2,
-                        '2xl' => 2,
-                    ])
-                    ->schema([
-                        TextEntry::make('name')
-                            ->label(__('unit.name')),
+                    ->placeholder('无'),
 
-                        TextEntry::make('en_name')
-                            ->label(__('unit.en_name')),
+                TextEntry::make('created_at')
+                    ->label(__('unit.created_at'))
+                    ->dateTime('Y-m-d H:i:s')
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
 
-                        TextEntry::make('remark')
-                            ->label(__('unit.remark'))
-                            ->markdown(),
-
-                        TextEntry::make('created_at')
-                            ->label(__('unit.created_at'))
-                            ->dateTime('Y-m-d H:i:s'),
-
-                        TextEntry::make('updated_at')
-                            ->label(__('unit.updated_at'))
-                            ->dateTime('Y-m-d H:i:s'),
+                TextEntry::make('updated_at')
+                    ->label(__('unit.updated_at'))
+                    ->dateTime('Y-m-d H:i:s')
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
                     ]),
             ])
             ->columns([
-                'sm' => 2,
-                'md' => 2,
-                'lg' => 2,
-                'xl' => 2,
-                '2xl' => 2,
+                'sm' => 3,
+                'md' => 3,
+                'lg' => 3,
+                'xl' => 3,
+                '2xl' => 3,
             ]);
     }
 }

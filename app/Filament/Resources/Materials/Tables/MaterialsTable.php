@@ -15,33 +15,35 @@ class MaterialsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label(__('material.id'))
-                    ->sortable()
-                    ->searchable(),
-
                 TextColumn::make('name')
                     ->label(__('material.name'))
-                    ->sortable()
                     ->searchable()
                     ->limit(30),
 
                 TextColumn::make('en_name')
                     ->label(__('material.en_name'))
-                    ->sortable()
                     ->searchable()
-                    ->limit(20),
+                    ->limit(20)
+                    ->placeholder('无'),
 
                 TextColumn::make('alias')
                     ->label(__('material.alias'))
-                    ->sortable()
                     ->searchable()
-                    ->limit(30),
+                    ->limit(30)
+                    ->placeholder('无'),
+
+                TextColumn::make('units.name')
+                    ->label('关联单位')
+                    ->badge()
+                    ->separator(',')
+                    ->searchable()
+                    ->limit(30)
+                    ->placeholder('无'),
 
                 TextColumn::make('description')
                     ->label(__('material.description'))
-                    ->wrap()
-                    ->html(),
+                    ->limit(50)
+                    ->placeholder('无'),
 
                 TextColumn::make('created_at')
                     ->label(__('material.created_at'))

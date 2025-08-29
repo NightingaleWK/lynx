@@ -20,7 +20,7 @@ class MaterialResource extends Resource
 {
     protected static ?string $model = Material::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -47,7 +47,7 @@ class MaterialResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // RelationManagers\UnitsRelationManager::class,
         ];
     }
 

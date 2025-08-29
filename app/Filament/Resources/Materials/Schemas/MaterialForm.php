@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Materials\Schemas;
 
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
@@ -17,32 +19,73 @@ class MaterialForm
                     ->required()
                     ->maxLength(255)
                     ->placeholder(__('material.name'))
-                    ->columnSpan(1),
+                    ->columnSpan(1)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 3,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
 
                 TextInput::make('en_name')
                     ->label(__('material.en_name'))
                     ->maxLength(100)
                     ->placeholder(__('material.en_name'))
-                    ->columnSpan(1),
+                    ->columnSpan(1)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
 
                 TextInput::make('alias')
                     ->label(__('material.alias'))
                     ->maxLength(255)
                     ->placeholder(__('material.alias'))
-                    ->columnSpan(1),
+                    ->columnSpan(1)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
+
+                Select::make('units')
+                    ->label('关联单位')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+                    ->columnSpan([
+                        'sm' => 3,
+                        'md' => 1,
+                        'lg' => 1,
+                        'xl' => 1,
+                        '2xl' => 1,
+                    ]),
 
                 Textarea::make('description')
                     ->label(__('material.description'))
-                    ->rows(3)
+                    ->autosize()
                     ->placeholder(__('material.description'))
-                    ->columnSpanFull(),
+                    ->columnSpan([
+                        'sm' => 3,
+                        'md' => 3,
+                        'lg' => 2,
+                        'xl' => 2,
+                        '2xl' => 2,
+                    ]),
             ])
             ->columns([
-                'sm' => 2,
+                'sm' => 3,
                 'md' => 2,
-                'lg' => 6,
-                'xl' => 6,
-                '2xl' => 6,
+                'lg' => 3,
+                'xl' => 3,
+                '2xl' => 3,
             ]);
     }
 }
