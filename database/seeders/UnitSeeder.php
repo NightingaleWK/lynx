@@ -59,5 +59,7 @@ class UnitSeeder extends Seeder
             'en_name' => 'pcs',
             'remark' => '',
         ]);
+
+        $this->command->info('已创建 ' . Unit::count() . ' 个物料单位');
     }
 }

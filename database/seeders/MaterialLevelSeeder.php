@@ -77,5 +77,7 @@ class MaterialLevelSeeder extends Seeder
 
         // 插入预设分类数据
         DB::table('material_levels')->insert($categories);
+
+        $this->command->info('已创建 ' . count($categories) . ' 个物料分类');
     }
 }

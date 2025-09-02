@@ -59,7 +59,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make()
-                    ->label('订单管理')
+                    ->label('菜谱管理')
                     ->icon('heroicon-o-clipboard-document'),
                 NavigationGroup::make()
                     ->label('物料管理')

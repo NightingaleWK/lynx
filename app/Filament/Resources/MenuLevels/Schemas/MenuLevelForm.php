@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\OrderLevels\Schemas;
+namespace App\Filament\Resources\MenuLevels\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -8,21 +8,21 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
-class OrderLevelForm
+class MenuLevelForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label(__('material-level.name'))
+                    ->label(__('menu-level.name'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder(__('material-level.name'))
+                    ->placeholder(__('menu-level.name'))
                     ->columnSpan(1),
 
                 TextInput::make('sort_order')
-                    ->label(__('material-level.sort_order'))
+                    ->label(__('menu-level.sort_order'))
                     ->required()
                     ->numeric()
                     ->default(0)
@@ -32,7 +32,7 @@ class OrderLevelForm
                     ->columnSpan(1),
 
                 ToggleButtons::make('is_visible')
-                    ->label(__('material-level.is_visible'))
+                    ->label(__('menu-level.is_visible'))
                     ->options([
                         true => '是',
                         false => '否'

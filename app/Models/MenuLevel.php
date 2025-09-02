@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderLevel extends Model
+class MenuLevel extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderLevelFactory> */
+    /** @use HasFactory<\Database\Factories\MenuLevelFactory> */
     use HasFactory;
 
     /**

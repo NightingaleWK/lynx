@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\OrderLevels\Pages;
+namespace App\Filament\Resources\MenuLevels\Pages;
 
-use App\Filament\Resources\OrderLevels\OrderLevelResource;
+use App\Filament\Resources\MenuLevels\MenuLevelResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditOrderLevel extends EditRecord
+class EditMenuLevel extends EditRecord
 {
-    protected static string $resource = OrderLevelResource::class;
+    protected static string $resource = MenuLevelResource::class;
 
     protected function getHeaderActions(): array
     {

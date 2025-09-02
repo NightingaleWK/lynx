@@ -25,5 +25,7 @@ class UserSeeder extends Seeder
             'is_active' => true,
             'password' => bcrypt('Admin@123'),
         ]);
+
+        $this->command->info('已创建 ' . User::count() . ' 个用户');
     }
 }

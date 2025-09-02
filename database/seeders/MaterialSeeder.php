@@ -35,5 +35,7 @@ class MaterialSeeder extends Seeder
 
         // 使用 factory 生成10个随机材料
         Material::factory(10)->create();
+
+        $this->command->info('已创建 ' . Material::count() . ' 个物料');
     }
 }

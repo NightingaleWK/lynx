@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class OrderLevelSeeder extends Seeder
+class MenuLevelSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -80,9 +80,11 @@ class OrderLevelSeeder extends Seeder
         ];
 
         // 清空现有数据（可选）
-        DB::table('order_levels')->delete();
+        DB::table('menu_levels')->delete();
 
         // 插入预设分类数据
-        DB::table('order_levels')->insert($categories);
+        DB::table('menu_levels')->insert($categories);
+
+        $this->command->info('已创建 ' . count($categories) . ' 个菜谱分类');
     }
 }
