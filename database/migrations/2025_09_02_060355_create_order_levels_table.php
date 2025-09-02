@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('material_levels', function (Blueprint $table) {
+        Schema::create('order_levels', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('分类名称');
             $table->unsignedInteger('sort_order')->default(0)->comment('排序权重。数值越大越靠前');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->index('sort_order');
             $table->index('is_visible');
 
-            $table->comment('物料分类表');
+            $table->comment('订单分类表');
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('material_levels');
+        Schema::dropIfExists('order_levels');
     }
 };

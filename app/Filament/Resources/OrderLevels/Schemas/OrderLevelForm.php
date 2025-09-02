@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\MaterialLevels\Schemas;
+namespace App\Filament\Resources\OrderLevels\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
-class MaterialLevelForm
+class OrderLevelForm
 {
     public static function configure(Schema $schema): Schema
     {

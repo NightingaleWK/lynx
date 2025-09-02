@@ -59,6 +59,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make()
+                    ->label('订单管理')
+                    ->icon('heroicon-o-cube'),
+                NavigationGroup::make()
                     ->label('物料管理')
                     ->icon('heroicon-o-cube'),
             ])

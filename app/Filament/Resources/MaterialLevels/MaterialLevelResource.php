@@ -29,7 +29,7 @@ class MaterialLevelResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('materiallevel.label');
+        return __('material-level.label');
     }
 
     public static function form(Schema $schema): Schema

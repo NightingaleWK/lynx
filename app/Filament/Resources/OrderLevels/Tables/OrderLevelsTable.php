@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\MaterialLevels\Tables;
+namespace App\Filament\Resources\OrderLevels\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -12,43 +12,42 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
-class MaterialLevelsTable
+class OrderLevelsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('material-level.name'))
+                    ->label(__('order-level.name'))
                     ->searchable()
                     ->limit(30),
 
                 TextColumn::make('sort_order')
-                    ->label(__('material-level.sort_order'))
+                    ->label(__('order-level.sort_order'))
                     ->numeric()
                     ->badge()
                     ->color('success'),
 
                 ToggleColumn::make('is_visible')
-                    ->label(__('material-level.is_visible'))
+                    ->label(__('order-level.is_visible'))
                     ->onColor('success')
                     ->onIcon(Heroicon::Check)
                     ->offIcon(Heroicon::XMark),
 
                 TextColumn::make('created_at')
-                    ->label(__('material-level.created_at'))
+                    ->label(__('order-level.created_at'))
                     ->dateTime('Y-m-d H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label(__('material-level.updated_at'))
+                    ->label(__('order-level.updated_at'))
                     ->dateTime('Y-m-d H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('sort_order', 'desc')
-            ->filters([
+            ->defaultSort('sort_order', 'desc')->filters([
                 //
             ])
             ->recordActions([

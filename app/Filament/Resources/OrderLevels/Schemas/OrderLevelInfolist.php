@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\MaterialLevels\Schemas;
+namespace App\Filament\Resources\OrderLevels\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
 
-class MaterialLevelInfolist
+class OrderLevelInfolist
 {
     public static function configure(Schema $schema): Schema
     {
