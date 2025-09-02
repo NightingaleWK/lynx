@@ -22,11 +22,11 @@ class MaterialForm
                     ->placeholder(__('material.name'))
                     ->columnSpan(1)
                     ->columnSpan([
-                        'sm' => 1,
+                        'sm' => 2,
                         'md' => 3,
-                        'lg' => 1,
-                        'xl' => 1,
-                        '2xl' => 1,
+                        'lg' => 2,
+                        'xl' => 2,
+                        '2xl' => 2,
                     ]),
 
                 TextInput::make('en_name')
@@ -76,7 +76,7 @@ class MaterialForm
                     ->preload()
                     ->multiple()
                     ->columnSpan([
-                        'sm' => 3,
+                        'sm' => 1,
                         'md' => 1,
                         'lg' => 1,
                         'xl' => 1,
@@ -89,10 +89,10 @@ class MaterialForm
                     ->placeholder(__('material.description'))
                     ->columnSpan([
                         'sm' => 3,
-                        'md' => 3,
-                        'lg' => 2,
-                        'xl' => 2,
-                        '2xl' => 2,
+                        'md' => 2,
+                        'lg' => 3,
+                        'xl' => 3,
+                        '2xl' => 3,
                     ]),
             ])
             ->columns([
