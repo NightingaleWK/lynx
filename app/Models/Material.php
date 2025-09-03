@@ -38,4 +38,14 @@ class Material extends Model
         return $this->belongsToMany(Unit::class, 'materials_units')
             ->withTimestamps();
     }
+
+    /**
+     * 与菜谱的多对多关联（通过中间表）
+     */
+    public function menus(): BelongsToMany
+    {
+        return $this->belongsToMany(Menu::class, 'menu_materials')
+            ->withPivot('unit_id', 'quantity')
+            ->withTimestamps();
+    }
 }

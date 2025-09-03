@@ -3,10 +3,13 @@
 namespace App\Filament\Resources\Menus\Schemas;
 
 use App\Models\MenuLevel;
+use App\Models\Material;
+use App\Models\Unit;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -66,6 +69,67 @@ class MenuForm
                         'lg' => 2,
                         'xl' => 2,
                         '2xl' => 2,
+                    ])
+                    ->columnSpanFull(),
+
+                Section::make('物料清单')
+                    ->schema([
+                        Repeater::make('menu_materials')
+                            ->label('物料列表')
+                            ->schema([
+                                Select::make('material_id')
+                                    ->label('选择物料')
+                                    ->options(Material::with('materialLevel')
+                                        ->get()
+                                        ->mapWithKeys(function ($material) {
+                                            $levelName = $material->materialLevel?->name ?? '未分类';
+                                            return [$material->id => "{$material->name} ({$levelName})"];
+                                        }))
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        if ($state) {
+                                            $material = Material::find($state);
+                                            if ($material && $material->units->count() > 0) {
+                                                $set('unit_id', $material->units->first()->id);
+                                            }
+                                        }
+                                    })
+                                    ->columnSpan(1),
+
+                                Select::make('unit_id')
+                                    ->label('选择单位')
+                                    ->options(function ($get) {
+                                        $materialId = $get('material_id');
+                                        if (!$materialId) {
+                                            return [];
+                                        }
+
+                                        $material = Material::with('units')->find($materialId);
+                                        return $material ? $material->units->pluck('name', 'id') : [];
+                                    })
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->columnSpan(1),
+
+                                TextInput::make('quantity')
+                                    ->label('数量')
+                                    ->numeric()
+                                    ->required()
+                                    ->minValue(0.01)
+                                    ->step(0.01)
+                                    ->default(1)
+                                    ->columnSpan(1),
+                            ])
+                            ->columns(3)
+                            ->defaultItems(0)
+                            ->reorderable(false)
+                            ->collapsible()
+                            // ->itemLabel(fn(array $state): ?string => $state['material_id'] ?? null)
+                            ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
 

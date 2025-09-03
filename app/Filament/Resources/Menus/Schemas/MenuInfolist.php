@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Menus\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Section;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
 
@@ -69,6 +70,34 @@ class MenuInfolist
                         'lg' => 3,
                         'xl' => 3,
                         '2xl' => 3,
+                    ])
+                    ->columnSpanFull(),
+
+                Fieldset::make('物料清单')
+                    ->schema([
+                        TextEntry::make('materials_list')
+                            ->label('物料列表')
+                            ->state(function ($record) {
+                                // 直接从record获取关联数据
+                                if (!$record || !$record->menuMaterials) {
+                                    return '暂无物料';
+                                }
+
+                                $menuMaterials = $record->menuMaterials;
+
+                                if ($menuMaterials->count() === 0) {
+                                    return '暂无物料';
+                                }
+
+                                return $menuMaterials->map(function ($menuMaterial) {
+                                    $materialName = $menuMaterial->material->name ?? '未知物料';
+                                    $unitName = $menuMaterial->unit->name ?? '未知单位';
+                                    $quantity = $menuMaterial->quantity ?? 0;
+                                    return "• {$materialName} - {$quantity} {$unitName}";
+                                })->join('<br>');
+                            })
+                            ->html()
+                            ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
 

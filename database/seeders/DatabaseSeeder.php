@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             MaterialSeeder::class,
             MenuLevelSeeder::class,
             MenuSeeder::class,
+            MenuMaterialSeeder::class,
         ]);
     }
 }

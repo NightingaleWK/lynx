@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
@@ -41,6 +43,24 @@ class Menu extends Model
     public function menuLevel(): BelongsTo
     {
         return $this->belongsTo(MenuLevel::class);
+    }
+
+    /**
+     * 与物料的多对多关联（通过中间表）
+     */
+    public function materials(): BelongsToMany
+    {
+        return $this->belongsToMany(Material::class, 'menu_materials')
+            ->withPivot('unit_id', 'quantity')
+            ->withTimestamps();
+    }
+
+    /**
+     * 与菜单物料的关联
+     */
+    public function menuMaterials(): HasMany
+    {
+        return $this->hasMany(MenuMaterial::class);
     }
 
     /**
