@@ -7,12 +7,19 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
+use App\Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use App\Filament\Widgets\OrdersOverview;
+use App\Filament\Widgets\PopularMenusOverview;
+use App\Filament\Widgets\LatestOrders;
+use App\Filament\Widgets\OrderStatusChart;
+use App\Filament\Widgets\TodayOrdersChart;
+use App\Filament\Widgets\SystemOverview;
+use App\Filament\Widgets\WelcomeMessage;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -42,6 +49,12 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                OrdersOverview::class,
+                PopularMenusOverview::class,
+                SystemOverview::class,
+                LatestOrders::class,
+                OrderStatusChart::class,
+                TodayOrdersChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
