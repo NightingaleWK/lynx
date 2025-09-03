@@ -128,7 +128,13 @@ class MenuForm
                             ->defaultItems(0)
                             ->reorderable(false)
                             ->collapsible()
-                            // ->itemLabel(fn(array $state): ?string => $state['material_id'] ?? null)
+                            ->itemLabel(function (array $state): ?string {
+                                if (empty($state['material_id'])) {
+                                    return null;
+                                }
+                                $material = \App\Models\Material::find($state['material_id']);
+                                return $material ? $material->name : null;
+                            })
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
