@@ -64,6 +64,14 @@ class Menu extends Model
     }
 
     /**
+     * 与订单项的关联
+     */
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /**
      * 默认排序
      */
     public function scopeOrdered($query)
