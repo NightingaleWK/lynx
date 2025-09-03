@@ -16,12 +16,24 @@ class OrderInfolist
             ->components([
                 Fieldset::make(__('order.form.basic_info'))
                     ->schema([
-                        TextEntry::make('order_number')
-                            ->label(__('order.order_number'))
-                            ->size('lg')
-                            ->weight('bold')
-                            ->copyable()
-                            ->icon('heroicon-o-hashtag')
+                        // TextEntry::make('order_number')
+                        //     ->label(__('order.order_number'))
+                        //     ->size('lg')
+                        //     ->weight('bold')
+                        //     ->copyable()
+                        //     ->icon('heroicon-o-hashtag')
+                        //     ->columnSpan([
+                        //         'sm' => 1,
+                        //         'md' => 1,
+                        //         'lg' => 1,
+                        //         'xl' => 1,
+                        //         '2xl' => 1,
+                        //     ]),
+
+                        TextEntry::make('dining_time')
+                            ->label(__('order.dining_time'))
+                            ->dateTime('Y-m-d H:i')
+                            ->icon('heroicon-o-clock')
                             ->columnSpan([
                                 'sm' => 1,
                                 'md' => 1,
@@ -49,28 +61,16 @@ class OrderInfolist
                                 '2xl' => 1,
                             ]),
 
-                        TextEntry::make('dining_time')
-                            ->label(__('order.dining_time'))
-                            ->dateTime('Y-m-d H:i')
-                            ->icon('heroicon-o-clock')
-                            ->columnSpan([
-                                'sm' => 1,
-                                'md' => 1,
-                                'lg' => 1,
-                                'xl' => 1,
-                                '2xl' => 1,
-                            ]),
-
                         TextEntry::make('remarks')
                             ->label(__('order.remarks'))
                             ->placeholder(__('order-item.no_remarks'))
                             ->icon('heroicon-o-chat-bubble-left-ellipsis')
                             ->columnSpan([
                                 'sm' => 1,
-                                'md' => 3,
-                                'lg' => 3,
-                                'xl' => 3,
-                                '2xl' => 3,
+                                'md' => 1,
+                                'lg' => 1,
+                                'xl' => 1,
+                                '2xl' => 1,
                             ]),
                     ])
                     ->columns([

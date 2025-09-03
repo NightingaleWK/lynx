@@ -27,7 +27,8 @@ class OrdersTable
                     ->label(__('order.order_number'))
                     ->searchable()
                     ->sortable()
-                    ->copyable(),
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('dining_time')
                     ->label(__('order.dining_time'))
@@ -46,16 +47,11 @@ class OrdersTable
                         $items = $record->orderItems->map(function ($item) {
                             return $item->menu->title . ' × ' . $item->quantity;
                         });
-                        return $items->join('、');
+                        return $items->toArray();
                     })
-                    ->limit(50)
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-                        if (strlen($state) <= 50) {
-                            return null;
-                        }
-                        return $state;
-                    }),
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
 
                 TextColumn::make('orderItems_count')
                     ->label(__('order.total_quantity'))
@@ -97,6 +93,7 @@ class OrdersTable
                         DatePicker::make('date')
                             ->label(__('order.select_date'))
                             ->displayFormat('Y-m-d')
+                            ->default(today())
                             ->native(false),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
