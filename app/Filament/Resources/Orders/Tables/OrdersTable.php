@@ -11,6 +11,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -103,28 +104,7 @@ class OrdersTable
                                 fn(Builder $query, $date): Builder => $query->whereDate('dining_time', $date),
                             );
                     }),
-                // SelectFilter::make('today')
-                //     ->label(__('order.filter_today'))
-                //     ->native(false)
-                //     ->options([
-                //         'today' => __('order.filter_today'),
-                //         'pending' => __('order.filter_pending'),
-                //         'in_progress' => __('order.filter_in_progress'),
-                //     ])
-                //     ->default('today')
-                //     ->query(function ($query, array $data) {
-                //         if ($data['value'] === 'today') {
-                //             return $query->today();
-                //         }
-                //         if ($data['value'] === 'pending') {
-                //             return $query->pending();
-                //         }
-                //         if ($data['value'] === 'in_progress') {
-                //             return $query->inProgress();
-                //         }
-                //         return $query;
-                //     }),
-            ])
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

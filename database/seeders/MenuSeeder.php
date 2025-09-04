@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Menu;
 use App\Models\MenuLevel;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MenuSeeder extends Seeder
@@ -14,89 +13,158 @@ class MenuSeeder extends Seeder
      */
     public function run(): void
     {
-        // 确保有菜谱分类数据
-        if (MenuLevel::count() === 0) {
-            $this->command->info('没有找到菜谱分类数据，请先运行 MenuLevelSeeder');
-            return;
-        }
+        // 获取分类
+        $soupLevel = MenuLevel::where('name', '汤类')->first();
+        $stirFryLevel = MenuLevel::where('name', '炒菜')->first();
 
-        // 创建一些具体的示例菜谱
-        $this->createSampleMenus();
+        // 创建土豆汤菜谱
+        Menu::create([
+            'title' => '土豆汤',
+            'subtitle' => '炖至软糯入味的土豆片，汤汁鲜美浓郁，口感绵密，是暖身暖心的绝佳选择。',
+            'menu_level_id' => $soupLevel->id,
+            'content' => $this->getPotatoSoupContent(),
+            'order_count' => 0,
+            'view_count' => 0,
+            'is_visible' => true,
+            'sort_order' => 100,
+        ]);
 
-        // 使用 factory 生成10个随机菜谱
-        Menu::factory(10)->create();
+        // 创建黄瓜炒鸡蛋菜谱
+        Menu::create([
+            'title' => '黄瓜炒鸡蛋',
+            'subtitle' => '清爽脆嫩的黄瓜与金黄滑嫩的鸡蛋完美融合，色香味俱佳，简单又美味的家常小炒。',
+            'menu_level_id' => $stirFryLevel->id,
+            'content' => $this->getCucumberEggContent(),
+            'order_count' => 0,
+            'view_count' => 0,
+            'is_visible' => true,
+            'sort_order' => 95,
+        ]);
+
+        // 创建青椒炒豆腐皮菜谱
+        Menu::create([
+            'title' => '青椒炒豆腐皮',
+            'subtitle' => '青椒的清香与豆腐皮的Q弹完美结合，口感丰富，是一道简单快手的家常素菜。',
+            'menu_level_id' => $stirFryLevel->id,
+            'content' => $this->getTofuSkinPepperContent(),
+            'order_count' => 0,
+            'view_count' => 0,
+            'is_visible' => true,
+            'sort_order' => 90,
+        ]);
 
         $this->command->info('已创建 ' . Menu::count() . ' 个菜谱');
     }
 
     /**
-     * 创建示例菜谱
+     * 获取土豆汤的详细做法
      */
-    private function createSampleMenus(): void
+    private function getPotatoSoupContent(): string
     {
-        $defaultLevel = MenuLevel::where('name', '默认')->first();
-        $stirFryLevel = MenuLevel::where('name', '炒菜')->first();
-        $soupLevel = MenuLevel::where('name', '煲汤')->first();
-        $dessertLevel = MenuLevel::where('name', '甜品')->first();
+        return "### 准备材料
+- 土豆 1个（一人食选小土豆，二人食选大土豆或两个小土豆）
+- 大蒜 3颗（拍散剁碎成沫）
+- 盐 1茶勺
+- 白胡椒粉 1茶勺
+- 味精 1茶勺
+- 醋 1勺
+- 耗油 1勺
+- 葱花 1勺
 
-        // 示例菜谱1：红烧肉
-        Menu::factory()->create([
-            'title'          => '红烧肉',
-            'subtitle'       => '经典家常菜',
-            'content'        => '红烧肉是一道经典的中式家常菜，选用五花肉为主料，配以生抽、老抽、冰糖等调料，经过炒糖色、炖煮等工序制作而成。成品色泽红亮，肥而不腻，瘦而不柴，口感软糯，味道鲜美。',
-            'order_count'    => 156,
-            'view_count'     => 892,
-            'menu_level_id'  => $stirFryLevel?->id ?? $defaultLevel?->id,
-            'is_visible'     => true,
-            'sort_order'     => 95,
-        ]);
+### 制作步骤
 
-        // 示例菜谱2：银耳莲子汤
-        Menu::factory()->create([
-            'title'          => '银耳莲子汤',
-            'subtitle'       => '营养滋补',
-            'content'        => '银耳莲子汤是一道传统的滋补甜品，具有润肺养颜、滋阴润燥的功效。选用优质银耳、莲子、红枣等食材，经过长时间炖煮，汤汁清甜，银耳软糯，莲子香甜，是秋冬季节的养生佳品。',
-            'order_count'    => 89,
-            'view_count'     => 456,
-            'menu_level_id'  => $soupLevel?->id ?? $defaultLevel?->id,
-            'is_visible'     => true,
-            'sort_order'     => 88,
-        ]);
+1. **准备土豆**：土豆洗净，去皮，对半切（大土豆则再切一次，片太大后续不容易翻炒），再切片。切片后凉水冲洗3遍，去除表面淀粉，并浸泡一会。
 
-        // 示例菜谱3：双皮奶
-        Menu::factory()->create([
-            'title'          => '双皮奶',
-            'subtitle'       => '广式甜品',
-            'content'        => '双皮奶是广东传统甜品，以牛奶、鸡蛋、白糖为主要原料制作而成。制作工艺独特，需要两次形成奶皮，因此得名"双皮奶"。成品口感嫩滑，奶香浓郁，甜而不腻，是夏日消暑的佳品。',
-            'order_count'    => 234,
-            'view_count'     => 1205,
-            'menu_level_id'  => $dessertLevel?->id ?? $defaultLevel?->id,
-            'is_visible'     => true,
-            'sort_order'     => 92,
-        ]);
+2. **处理大蒜**：大蒜去皮，拍散，剁成碎末。
 
-        // 示例菜谱4：宫保鸡丁
-        Menu::factory()->create([
-            'title'          => '宫保鸡丁',
-            'subtitle'       => '川菜代表',
-            'content'        => '宫保鸡丁是四川传统名菜，以鸡胸肉、花生米、干辣椒为主要食材，配以葱、姜、蒜等调料炒制而成。成品色泽红亮，鸡肉嫩滑，花生香脆，味道麻辣鲜香，是川菜中的经典代表。',
-            'order_count'    => 198,
-            'view_count'     => 967,
-            'menu_level_id'  => $stirFryLevel?->id ?? $defaultLevel?->id,
-            'is_visible'     => true,
-            'sort_order'     => 90,
-        ]);
+3. **准备砂锅**：准备砂锅一个，锅底倒一点油，摇匀使其铺满锅底。
 
-        // 示例菜谱5：隐藏菜谱示例
-        Menu::factory()->create([
-            'title'          => '秘制酱料',
-            'subtitle'       => '内部配方',
-            'content'        => '这是内部使用的秘制酱料配方，暂时不对外公开。',
-            'order_count'    => 12,
-            'view_count'     => 45,
-            'menu_level_id'  => $defaultLevel?->id,
-            'is_visible'     => false,
-            'sort_order'     => 10,
-        ]);
+4. **爆香蒜末**：开大火，烧热锅体和油，油烧热后倒入蒜末，炒香。
+
+5. **翻炒土豆**：土豆片沥干水分，导入锅中，继续翻炒30s。
+
+6. **加水炖煮**：倒入清水，水面没过土豆，爱喝汤的可适当再多一点水。
+
+7. **调味炖煮**：继续保持大火，将水烧开，水开后转中小火继续炖煮10分钟。
+
+8. **调味**：紧接着，开始调味。加入一茶勺盐、一茶勺白胡椒粉（先倒在炒勺中，然后用汤搅开搅散，再倒入汤中）、一茶勺味精、一勺醋、一勺耗油（先倒在炒勺中，然后用汤搅开搅散，再倒入汤中）。
+
+9. **出锅**：时间到后关火，导入葱花，出锅上桌。
+
+### 小贴士
+- 土豆切片后一定要冲洗去除淀粉，这样汤会更清澈
+- 调味料先倒在炒勺中用汤搅散再倒入，可以避免结块
+- 根据个人口味可以适当调整调味料的用量";
+    }
+
+    /**
+     * 获取黄瓜炒鸡蛋的详细做法
+     */
+    private function getCucumberEggContent(): string
+    {
+        return "### 准备材料
+- 黄瓜 3根
+- 鸡蛋 4个
+- 蒜 3瓣
+- 盐 1茶勺
+- 味精 1茶勺
+
+### 制作步骤
+
+1. **准备黄瓜**：黄瓜洗净，对半切开，斜刀切片。
+
+2. **准备鸡蛋**：鸡蛋打散待用。
+
+3. **处理大蒜**：三瓣蒜拍散剁成蒜末。
+
+4. **炒鸡蛋**：起锅烧油，油热后转中火，下入鸡蛋液，不急着翻动，微微定型，炒勺前推，让蛋液重新流入锅底定型，炒勺后拉，让剩余蛋液重新流入锅底定型。颠勺反面，些许后，用炒勺捣碎成大块，关火，盛出备用。
+
+5. **爆香蒜末**：起锅烧油，油热下入蒜末，炒香。
+
+6. **炒制黄瓜**：下入黄瓜片，大火翻炒，炒至黄瓜片开始由白转为半透明，倒入鸡蛋块继续翻炒10s。
+
+7. **调味**：转小火调味。下入盐一茶勺，味精一茶勺，转大火翻拌均匀。
+
+8. **出锅**：关火，装盘，出锅。
+
+### 小贴士
+- 鸡蛋炒熟将有效去除蛋腥味";
+    }
+
+    /**
+     * 获取青椒炒豆腐皮的详细做法
+     */
+    private function getTofuSkinPepperContent(): string
+    {
+        return "### 准备材料
+- 豆腐皮 2张（又称千张）
+- 菜椒 2个
+- 青椒 1个
+- 小苏打 1茶勺（又称食碱）
+- 小炒调味剂 2勺（仲景家家常小炒调味剂，超市有卖，快速调味无需自配，有助于打工人快速吃上饭）
+- 大蒜 3瓣
+
+### 制作步骤
+
+1. **准备豆腐皮**：豆腐皮展开，切成一公分长的细丝，清洗后浸泡备用。
+
+2. **处理辣椒**：青椒、菜椒去蒂。菜椒一分为二，切丝。青椒直接切丝圈。
+
+3. **处理大蒜**：三瓣蒜拍散剁碎。
+
+4. **焯水豆腐皮**：准备给豆腐皮焯水。起锅加水，倒入一茶勺小苏打。水烧开后下入豆腐皮，20s后捞出，凉水冲3次以上，洗去碱，最后清水浸泡备用。
+
+5. **爆香蒜末**：起锅烧油，油热后下入蒜末炒香。
+
+6. **炒制辣椒**：下入青椒丝和菜椒丝，开大火炒，炒至辣椒丝发软。倒入豆腐皮，翻炒20s。
+
+7. **调味**：转小火调味，转圈淋入2勺仲景家家常小炒调味剂。然后开大火，翻炒30s。
+
+8. **出锅**：关火，出锅，装盘。
+
+### 小贴士
+- 小苏打会极大改善豆腐皮口感，使其软化Q弹
+- 豆腐皮在小苏打水中焯水不能过长，否则容易断，让食材过软影响口感
+- 菜椒没味道，加入点青椒提味。能吃辣的可以全部换成青椒。不吃辣？那就全换成小米辣以毒攻毒，练练就能吃辣了👊👊👊";
     }
 }
