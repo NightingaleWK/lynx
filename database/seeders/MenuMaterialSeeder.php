@@ -19,8 +19,10 @@ class MenuMaterialSeeder extends Seeder
         $potatoSoupMenu = Menu::where('title', '土豆汤')->first();
         $cucumberEggMenu = Menu::where('title', '黄瓜炒鸡蛋')->first();
         $tofuSkinPepperMenu = Menu::where('title', '青椒炒豆腐皮')->first();
+        $onionEggMenu = Menu::where('title', '洋葱炒鸡蛋')->first();
+        $shreddedPotatoMenu = Menu::where('title', '清炒土豆丝')->first();
 
-        if (!$potatoSoupMenu || !$cucumberEggMenu || !$tofuSkinPepperMenu) {
+        if (!$potatoSoupMenu || !$cucumberEggMenu || !$tofuSkinPepperMenu || !$onionEggMenu || !$shreddedPotatoMenu) {
             $this->command->error('未找到菜谱，请先运行 MenuSeeder');
             return;
         }
@@ -52,6 +54,23 @@ class MenuMaterialSeeder extends Seeder
             ['name' => '小苏打', 'unit' => '茶勺', 'quantity' => 1],
             ['name' => '小炒调味剂', 'unit' => '勺', 'quantity' => 2],
             ['name' => '大蒜', 'unit' => '瓣', 'quantity' => 3],
+        ];
+
+        $onionEggMaterials = [
+            ['name' => '洋葱', 'unit' => '个', 'quantity' => 1],
+            ['name' => '鸡蛋', 'unit' => '个', 'quantity' => 4],
+            ['name' => '盐', 'unit' => '茶勺', 'quantity' => 1],
+            ['name' => '鸡精', 'unit' => '茶勺', 'quantity' => 1],
+            ['name' => '生抽', 'unit' => '勺', 'quantity' => 1],
+            ['name' => '耗油', 'unit' => '勺', 'quantity' => 1],
+        ];
+
+        $shreddedPotatoMaterials = [
+            ['name' => '土豆', 'unit' => '个', 'quantity' => 1],
+            ['name' => '青椒', 'unit' => '个', 'quantity' => 1],
+            ['name' => '大蒜', 'unit' => '瓣', 'quantity' => 3],
+            ['name' => '盐', 'unit' => '茶勺', 'quantity' => 1],
+            ['name' => '味精', 'unit' => '茶勺', 'quantity' => 1],
         ];
 
         // 创建土豆汤物料关联
@@ -100,6 +119,44 @@ class MenuMaterialSeeder extends Seeder
             if ($material && $unit) {
                 DB::table('menu_materials')->insert([
                     'menu_id' => $tofuSkinPepperMenu->id,
+                    'material_id' => $material->id,
+                    'unit_id' => $unit->id,
+                    'quantity' => $materialData['quantity'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                $this->command->warn("未找到物料: {$materialData['name']} 或单位: {$materialData['unit']}");
+            }
+        }
+
+        // 创建洋葱炒鸡蛋物料关联
+        foreach ($onionEggMaterials as $materialData) {
+            $material = Material::where('name', $materialData['name'])->first();
+            $unit = Unit::where('name', $materialData['unit'])->first();
+
+            if ($material && $unit) {
+                DB::table('menu_materials')->insert([
+                    'menu_id' => $onionEggMenu->id,
+                    'material_id' => $material->id,
+                    'unit_id' => $unit->id,
+                    'quantity' => $materialData['quantity'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                $this->command->warn("未找到物料: {$materialData['name']} 或单位: {$materialData['unit']}");
+            }
+        }
+
+        // 创建清炒土豆丝物料关联
+        foreach ($shreddedPotatoMaterials as $materialData) {
+            $material = Material::where('name', $materialData['name'])->first();
+            $unit = Unit::where('name', $materialData['unit'])->first();
+
+            if ($material && $unit) {
+                DB::table('menu_materials')->insert([
+                    'menu_id' => $shreddedPotatoMenu->id,
                     'material_id' => $material->id,
                     'unit_id' => $unit->id,
                     'quantity' => $materialData['quantity'],
