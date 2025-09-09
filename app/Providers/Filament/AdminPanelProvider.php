@@ -77,6 +77,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('物料管理')
                     ->icon('heroicon-o-cube'),
+                NavigationGroup::make()
+                    ->label('许愿池')
+                    ->icon('heroicon-o-sparkles'),
             ])
             ->sidebarCollapsibleOnDesktop();
     }
