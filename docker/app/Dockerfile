@@ -7,21 +7,24 @@ WORKDIR /var/www/html
 # 安装编译 PHP 扩展所需的系统依赖库
 # zlib-dev 解决了 gd 扩展的问题
 # libpng-dev, jpeg-dev, freetype-dev 是 gd 扩展常用的依赖
-# icu-dev 是本次报错的核心，为 intl 扩展提供依赖
+# icu-dev 为 intl 扩展提供依赖
+# zip 和 libzip-dev 是本次报错的核心，为 zip 扩展提供依赖
 RUN apk add --no-cache \
     $PHPIZE_DEPS \
     zlib-dev \
     libpng-dev \
     jpeg-dev \
     freetype-dev \
-    icu-dev
+    icu-dev \
+    zip \
+    libzip-dev
 
 # 安装 PHP 扩展
 # 1. 配置 gd 扩展以支持 freetype 和 jpeg
-# 2. 安装所有需要的扩展
+# 2. 安装所有需要的扩展 (新增了 zip)
 # 3. 安装 redis 扩展
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql bcmath gd exif intl \
+    && docker-php-ext-install pdo_mysql bcmath gd exif intl zip \
     && pecl install redis \
     && docker-php-ext-enable redis
 
