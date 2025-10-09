@@ -5,12 +5,16 @@ FROM php:8.2-fpm-alpine
 WORKDIR /var/www/html
 
 # 安装编译 PHP 扩展所需的系统依赖库
+# zlib-dev 解决了 gd 扩展的问题
+# libpng-dev, jpeg-dev, freetype-dev 是 gd 扩展常用的依赖
+# icu-dev 是本次报错的核心，为 intl 扩展提供依赖
 RUN apk add --no-cache \
     $PHPIZE_DEPS \
     zlib-dev \
     libpng-dev \
     jpeg-dev \
-    freetype-dev
+    freetype-dev \
+    icu-dev
 
 # 安装 PHP 扩展
 # 1. 配置 gd 扩展以支持 freetype 和 jpeg
