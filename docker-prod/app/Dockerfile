@@ -21,7 +21,7 @@ RUN apk add --no-cache \
     zlib-dev \
     linux-headers
 
-# 3. 借鉴 Sail，补全核心扩展
+# 3. 借鉴 Sail，补全 Laravel 所需的核心扩展
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
     pdo_mysql \
@@ -44,13 +44,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 拷贝 composer 文件并安装依赖
 COPY composer.json composer.lock ./
 # 生产环境优化：不安装开发依赖，并优化自动加载
+# 注意：如果需要在容器内运行 seeder，请暂时移除 --no-dev 参数并重新构建
 RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist --no-dev -o
 
 # 拷贝项目代码
 COPY . .
 
-# 设置文件权限
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# 注意：权限问题将在首次启动后通过 exec 命令解决，以确保与宿主机挂载的目录权限正确
+# RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # 暴露 9000 端口
 EXPOSE 9000
