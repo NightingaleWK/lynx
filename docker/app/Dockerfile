@@ -5,7 +5,6 @@ FROM php:8.4-fpm-alpine
 WORKDIR /var/www/html
 
 # 2. 优化构建过程：合并依赖安装，并使用 virtual group 以便后续清理
-# 新增了 pcntl 和 sockets 扩展所需的依赖
 RUN apk add --no-cache \
     # 核心系统工具
     zip \
@@ -19,10 +18,10 @@ RUN apk add --no-cache \
     # 创建一个名为 .build-deps 的临时构建依赖组
     && apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
-    zlib-dev
+    zlib-dev \
+    linux-headers
 
 # 3. 借鉴 Sail，补全核心扩展
-# 新增了 pcntl 和 sockets
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
     pdo_mysql \
@@ -55,4 +54,3 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 # 暴露 9000 端口
 EXPOSE 9000
-
