@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+  # 1. Laravel 应用服务 (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: lynx_app_prod
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - lynx-network-prod
+
+  # 2. Nginx 服务
+  nginx:
+    image: nginx:alpine
+    container_name: lynx_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/certs:/etc/nginx/certs # 存放 SSL 证书的目录
+    depends_on:
+      - app
+    networks:
+      - lynx-network-prod
+
+  # 3. MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: lynx_mysql_prod
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - lynx_mysql_data_prod:/var/lib/mysql
+    ports:
+      - "3306:3306" # 映射到宿主机，方便本地工具连接调试
+    networks:
+      - lynx-network-prod
+
+  # 4. Redis 服务
+  redis:
+    image: redis:alpine
+    container_name: lynx_redis_prod
+    restart: unless-stopped
+    volumes:
+      - lynx_redis_data_prod:/data
+    networks:
+      - lynx-network-prod
+
+  # 5. Laravel Queue Worker 服务
+  queue-worker:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: lynx_queue_worker_prod
+    restart: unless-stopped
+    # 覆盖默认指令，改为运行队列
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+      - redis
+      - mysql
+    networks:
+      - lynx-network-prod
+
+# 定义网络
+networks:
+  lynx-network-prod:
+    driver: bridge
+
+# 定义数据卷 (用于持久化)
+volumes:
+  lynx_mysql_data_prod:
+    driver: local
+  lynx_redis_data_prod:
+    driver: local
