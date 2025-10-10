@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\TrustProxies;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,16 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->use([
-            \Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks::class,
-            // \Illuminate\Http\Middleware\TrustHosts::class,
-            TrustProxies::class,
-            \Illuminate\Http\Middleware\HandleCors::class,
-            \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
-            \Illuminate\Http\Middleware\ValidatePostSize::class,
-            \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
-            \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        ]);
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO |
+                Request::HEADER_X_FORWARDED_AWS_ELB
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
