@@ -2,9 +2,7 @@ services:
   # Laravel Application
   app:
     build:
-      # 修正: 构建上下文改为项目根目录，以访问 composer.json
       context: .
-      # 修正: 指定 Dockerfile 的完整路径
       dockerfile: ./docker-internet/app/Dockerfile
     image: lynx/app-internet
     container_name: lynx-internet-app
@@ -22,14 +20,13 @@ services:
   # Nginx Web Server
   nginx:
     image: nginx:1.21-alpine
-    container_name: lynx-internet-nginx # <<< NPM 将通过此名称找到容器
+    container_name: lynx-internet-nginx
     restart: unless-stopped
     tty: true
     volumes:
       - ./:/var/www
       - ./docker-internet/nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      # 连接到内部网络和 NPM 的外部网络
       - lynx-internet-network
       - npm_default
 
@@ -46,7 +43,6 @@ services:
     volumes:
       - "lynx-internet-db-data:/var/lib/mysql"
     ports:
-      # 仅允许服务器本机访问数据库，更安全
       - "127.0.0.1:3306:3306"
     networks:
       - lynx-internet-network
@@ -65,10 +61,18 @@ services:
 
   # Queue Worker
   queue-worker:
-    image: lynx/app-internet # 使用与 app 相同的镜像
+    # =================================================================
+    # 修正: 添加 build 配置
+    # 明确告知 Docker Compose 此服务的镜像也来自于本地构建，
+    # 避免其尝试从 Docker Hub 拉取，从而解决网络超时问题。
+    # =================================================================
+    build:
+      context: .
+      dockerfile: ./docker-internet/app/Dockerfile
+    image: lynx/app-internet # 保留 image 标签以确保镜像名称一致
     container_name: lynx-internet-queue-worker
     restart: unless-stopped
-    command: "php artisan queue:work"
+    command: "php artisan queue:work --tries=3 --timeout=90"
     volumes:
       - ./:/var/www
     depends_on:
