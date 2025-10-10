@@ -14,12 +14,12 @@
 
 ### **1. 目录结构**
 
-为了清晰地区分生产环境与 Sail 开发环境的配置，我们将所有生产部署相关的文件都存放在一个新的 docker-prod 目录中。
+为了清晰地区分生产环境与 Sail 开发环境的配置，我们将所有生产部署相关的文件都存放在一个新的 docker-lan 目录中。
 
 在项目根目录下，创建如下的目录和文件结构：
 ```
 your-laravel-project/
-├── docker-prod/ # <-- 新建，存放所有生产环境配置
+├── docker-lan/ # <-- 新建，存放所有生产环境配置
 │ ├── app/
 │ │ └── Dockerfile
 │ └── nginx/
@@ -33,8 +33,8 @@ your-laravel-project/
 请根据后续提供的文件内容，在您的项目中创建或替换以下文件。
 
 * docker-compose.prod.yml (服务编排文件)
-* docker-prod/app/Dockerfile (PHP 应用镜像构建文件)
-* docker-prod/nginx/default.conf (Nginx 配置文件)
+* docker-lan/app/Dockerfile (PHP 应用镜像构建文件)
+* docker-lan/nginx/default.conf (Nginx 配置文件)
 * .dockerignore (Docker 忽略文件)
 
 ### **3. 修改 Laravel 配置 (.env)**
@@ -64,13 +64,13 @@ REDIS_PORT=6379
 
 ### **4. 生成 SSL 证书 (局域网 HTTPS)**
 
-1. 在项目根目录下创建目录 docker-prod/certs。
+1. 在项目根目录下创建目录 docker-lan/certs。
 2. 打开终端 (如 Git Bash 或 WSL)，进入项目根目录，执行以下命令：
 ```sh
-openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout docker-prod/ certs/lynx-key.pem -out docker-prod/certs/lynx.pem
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout docker-lan/ certs/lynx-key.pem -out docker-lan/certs/lynx.pem
 ```
 3. **重要提示**：在执行过程中，当提示输入 Common Name 时，**请输入您部署机器的局域网 IP 地址**（例如 192.168.1.100）。
-4. 执行后，请检查 docker-prod/certs 目录下是否已生成 lynx.pem 和 lynx-key.pem 两个文件。
+4. 执行后，请检查 docker-lan/certs 目录下是否已生成 lynx.pem 和 lynx-key.pem 两个文件。
 
 ## **三、部署与初始化流程**
 
