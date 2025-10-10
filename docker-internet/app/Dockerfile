@@ -6,10 +6,9 @@
 # 功能:
 # 1. 基于 PHP 8.4-FPM Alpine 镜像。
 # 2. 已更换为阿里云的 Alpine 软件源，加速依赖安装。
-# 3. (新增) 安装 Node.js 和 npm，用于前端资源构建。
-# 4. 安装 Laravel 所需的常用 PHP 扩展。
-# 5. 安装 Composer 并将其用于依赖管理。
-# 6. 优化生产环境，不安装 dev 依赖。
+# 3. 安装 Node.js 和 npm，用于前端资源构建。
+# 4. 使用官方安装脚本安装最新版 Composer。
+# 5. 安装 Laravel 所需的常用 PHP 扩展。
 #
 # -----------------------------------------------------------------------------
 
@@ -47,11 +46,15 @@ RUN apk add --no-cache \
     opcache \
     && apk del .build-deps
 
-# 从官方 Composer 镜像中拷贝 Composer 可执行文件
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# =================================================================
+# **更新: 使用官方脚本安装最新版 Composer**
+# 替换了原有的 COPY --from=composer:latest 方法，确保获取最新版本。
+# =================================================================
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');"
 
-# 拷贝 composer 和 package 文件
-# (注意：后续的 composer install 和 npm install 会在 exec 中执行，以作用于挂载的卷)
+# 拷贝项目配置文件，为后续在容器外执行 composer install / npm install 做准备
 COPY composer.json composer.lock package.json ./
 
 # 拷贝项目的其余代码
