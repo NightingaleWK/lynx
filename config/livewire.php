@@ -170,19 +170,4 @@ return [
     */
 
     'pagination_theme' => 'tailwind',
-
-    /*
-    |---------------------------------------------------------------------------
-    | Asset URL
-    |---------------------------------------------------------------------------
-    |
-    | This value sets the path to Livewire's public assets (scripts and styles)
-    | and is essential for correct asset loading behind a reverse proxy. By
-    | setting this to your application's public URL from the .env file, we
-    | force Livewire to generate correct HTTPS asset paths, bypassing any
-    | incorrect URL detection that causes the ":80" port issue.
-    |
-    */
-
-    'asset_url' => env('APP_URL'),
 ];
