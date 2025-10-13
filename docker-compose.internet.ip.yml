@@ -1,0 +1,97 @@
+services:
+  # Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: ./docker-internet-ip/app/Dockerfile
+    image: lynx/app-internet
+    container_name: lynx-internet-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: internet
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - lynx-internet-network
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:1.21-alpine
+    container_name: lynx-internet-nginx
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/var/www
+      - ./docker-internet-ip/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - lynx-internet-network
+      - npm_default
+
+  # MySQL Database
+  mysql:
+    image: "mysql/mysql-server:8.0"
+    container_name: lynx-internet-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_USER: "${DB_USERNAME}"
+    volumes:
+      - "lynx-internet-db-data:/var/lib/mysql"
+    ports:
+      - "127.0.0.1:3306:3306"
+    networks:
+      - lynx-internet-network
+
+  # Redis Cache
+  redis:
+    image: "redis:alpine"
+    container_name: lynx-internet-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - "lynx-internet-redis-data:/data"
+    networks:
+      - lynx-internet-network
+
+  # Queue Worker
+  queue-worker:
+    # =================================================================
+    # 修正: 添加 build 配置
+    # 明确告知 Docker Compose 此服务的镜像也来自于本地构建，
+    # 避免其尝试从 Docker Hub 拉取，从而解决网络超时问题。
+    # =================================================================
+    build:
+      context: .
+      dockerfile: ./docker-internet-ip/app/Dockerfile
+    image: lynx/app-internet # 保留 image 标签以确保镜像名称一致
+    container_name: lynx-internet-queue-worker
+    restart: unless-stopped
+    command: "php artisan queue:work --tries=3 --timeout=90"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - app
+      - redis
+    networks:
+      - lynx-internet-network
+
+# 定义网络
+networks:
+  lynx-internet-network:
+    driver: bridge
+  # 定义一个外部网络，用于连接到已存在的 npm_default
+  npm_default:
+    external: true
+
+# 定义数据卷
+volumes:
+  lynx-internet-db-data:
+    driver: local
+  lynx-internet-redis-data:
+    driver: local
