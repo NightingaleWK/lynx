@@ -39,8 +39,8 @@
 3. 通过 SSH 客户端（如 Xshell）登录到您的服务器。  
 4. 执行系统更新，确保所有基础软件都是最新版本： 
    ```sh
-   sudo apt update  
-   sudo apt upgrade -y
+   apt update  
+   apt upgrade -y
    ```
 
 ### **步骤 2：安装 Docker Engine (国内服务器优化)**
@@ -49,13 +49,13 @@
 
 1. 添加阿里云镜像站的 Docker GPG 密钥
    ```sh 
-   sudo apt-get install ca-certificates curl -y 
+   apt install ca-certificates curl -y 
    
-   sudo install -m 0755 -d /etc/apt/keyrings  
+   install -m 0755 -d /etc/apt/keyrings  
 
-   sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg  
+   curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg  
 
-   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   chmod a+r /etc/apt/keyrings/docker.gpg
    ```
 
 2. 添加阿里云的 Docker APT 软件源
@@ -64,12 +64,12 @@
    echo   
      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu   
      $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" |   
-     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+     tee /etc/apt/sources.list.d/docker.list > /dev/null
    ```
 3. 更新软件源索引并安装 Docker
    ```sh
-   sudo apt-get update  
-   sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+   apt update  
+   apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
    # 此命令会一并安装 Docker 引擎、命令行工具、containerd 以及 Docker Compose 插件。
    ```  
@@ -86,8 +86,8 @@
 
 1. 创建或修改 Docker 的配置文件： 
    ```sh
-   sudo mkdir -p /etc/docker  
-   sudo vim /etc/docker/daemon.json
+   mkdir -p /etc/docker  
+   vim /etc/docker/daemon.json
    ```
 
 2. 将以下 JSON 内容复制并粘贴到文件中：
@@ -106,8 +106,8 @@
 
 4. 重启 Docker 服务以使配置生效：  
    ```sh
-   sudo systemctl daemon-reload  
-   sudo systemctl restart docker
+   systemctl daemon-reload  
+   systemctl restart docker
    ```
 
 ### **步骤 4：配置安全组**
@@ -123,14 +123,14 @@
 
 1. 在服务器上，为 NPM 创建一个专用的工作目录：  
    ```sh
-   sudo mkdir -p /opt/npm/data  
-   sudo mkdir /opt/npm/letsencrypt
+   mkdir -p /opt/npm/data  
+   mkdir /opt/npm/letsencrypt
    ```
 
 2. 进入该目录并创建一个 docker-compose.yml 文件：
    ```sh
    cd /opt/npm  
-   sudo vim docker-compose.yml
+   vim docker-compose.yml
    ```
 
 3. 将以下内容复制并粘贴到这个新文件中，然后保存退出：
@@ -156,7 +156,7 @@
    ```  
 4. 启动 Nginx Proxy Manager:  
    ```sh
-   sudo docker compose up -d
+   docker compose up -d
    ```
 5. **初始化 NPM**：  
    * 打开浏览器，访问 `http://您的公网IP:81`（例如：http://123.57.128.170:81）。  
@@ -173,13 +173,13 @@
 
 1. 在服务器上，选择一个位置存放您的项目代码，例如 /var/www：  
    ```sh
-   sudo mkdir -p /var/www  
+   mkdir -p /var/www  
    cd /var/www
    ```
 
 2. 从您的 Git 仓库克隆项目代码：  
    ```sh
-   sudo git clone https://github.com/NightingaleWK/lynx.git lynx
+   git clone https://github.com/NightingaleWK/lynx.git lynx
    cd lynx
    ```
 
@@ -187,12 +187,12 @@
 
 1. 复制示例文件：  
    ```sh
-   sudo cp .env.example .env
+   cp .env.example .env
    ```
 
 2. 编辑 .env 文件： 
    ```sh
-   sudo vim .env
+   vim .env
    ```
 
 3. **进行以下关键修改**（⚠️ 重点：APP_URL 使用 IP 地址）： 
@@ -226,7 +226,7 @@
 编辑项目中的 Nginx 配置文件，使其支持 IP 访问：
 
 ```sh
-sudo vim docker-internet/nginx/default.conf
+vim docker-internet/nginx/default.conf
 ```
 
 找到 `server` 配置块，将 `server_name` 那一行修改为：
@@ -250,44 +250,44 @@ server {
 
 1. 在项目根目录 (/var/www/lynx) 下，使用 docker-compose.internet.ip.yml 文件执行构建命令：  
    ```sh
-   sudo docker compose -f docker-compose.internet.ip.yml up -d --build
+   docker compose -f docker-compose.internet.ip.yml up -d --build
    ```
 2. **执行 Laravel 生产环境初始化命令 (顺序很重要)**:  
    * **安装 Composer 后端依赖**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app composer install --no-dev --optimize-autoloader
+      docker compose -f docker-compose.internet.ip.yml exec app composer install --no-dev --optimize-autoloader
       ```
    * **生成 APP_KEY**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan key:generate
+      docker compose -f docker-compose.internet.ip.yml exec app php artisan key:generate
       ```
    * **安装 NPM 前端依赖**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app npm install
+      docker compose -f docker-compose.internet.ip.yml exec app npm install
       ```
    * **构建前端生产资源**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app npm run build
+      docker compose -f docker-compose.internet.ip.yml exec app npm run build
       ```
    * **创建存储链接**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan storage:link
+      docker compose -f docker-compose.internet.ip.yml exec app php artisan storage:link
       ```
    * **发布 Filament 核心资产**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan filament:assets
+      docker compose -f docker-compose.internet.ip.yml exec app php artisan filament:assets
       ```
    * **运行数据库迁移**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan migrate --force
+      docker compose -f docker-compose.internet.ip.yml exec app php artisan migrate --force
       ```
    * **优化生产环境缓存**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
+      docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
       ```
    * **修复目录权限 (最后一步)**:  
       ```sh
-      sudo docker compose -f docker-compose.internet.ip.yml exec app chown -R www-data:www-data storage bootstrap/cache
+      docker compose -f docker-compose.internet.ip.yml exec app chown -R www-data:www-data storage bootstrap/cache
       ```
 
 ---
@@ -326,11 +326,11 @@ server {
 
 ```sh
 # 创建证书存储目录
-sudo mkdir -p /opt/ssl
+mkdir -p /opt/ssl
 cd /opt/ssl
 
 # 生成自签名证书（有效期 365 天）
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout server.key \
   -out server.crt \
   -subj "/C=CN/ST=Beijing/L=Beijing/O=Personal/OU=IT/CN=您的公网IP"
@@ -376,7 +376,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 ```sh
 cd /opt/npm
-sudo docker compose restart
+docker compose restart
 ```
 
 #### **步骤 5：验证 HTTPS 访问**
@@ -401,11 +401,11 @@ sudo docker compose restart
 在服务器上执行：
 
 ```sh
-sudo mkdir -p /opt/ssl
+mkdir -p /opt/ssl
 cd /opt/ssl
 
 # 生成私钥和 CSR
-sudo openssl req -new -newkey rsa:2048 -nodes \
+openssl req -new -newkey rsa:2048 -nodes \
   -keyout server.key \
   -out server.csr \
   -subj "/C=CN/ST=Beijing/L=Beijing/O=Personal/OU=IT/CN=您的公网IP"
@@ -436,14 +436,14 @@ ZeroSSL 会要求您在服务器上创建一个验证文件：
 cd /var/www/lynx/public
 
 # 创建验证目录
-sudo mkdir -p .well-known/pki-validation
+mkdir -p .well-known/pki-validation
 
 # 下载或创建验证文件（ZeroSSL 会提供文件内容）
-sudo vim .well-known/pki-validation/XXXXXXXXXXXXXXX.txt
+vim .well-known/pki-validation/XXXXXXXXXXXXXXX.txt
 # 将 ZeroSSL 提供的内容粘贴进去，保存退出
 
 # 设置权限
-sudo chown -R www-data:www-data .well-known
+chown -R www-data:www-data .well-known
 ```
 
 在浏览器中访问 `http://您的公网IP/.well-known/pki-validation/XXXXXXXXXXXXXXX.txt`，确保能看到文件内容，然后在 ZeroSSL 点击 **Verify**。
@@ -492,7 +492,7 @@ sudo chown -R www-data:www-data .well-known
 
 1. 修改 `.env` 文件：
    ```sh
-   sudo vim /var/www/lynx/.env
+   vim /var/www/lynx/.env
    ```
    将 `APP_URL` 改为域名：
    ```env
@@ -501,7 +501,7 @@ sudo chown -R www-data:www-data .well-known
 
 2. 修改 Nginx 配置：
    ```sh
-   sudo vim /var/www/lynx/docker-internet/nginx/default.conf
+   vim /var/www/lynx/docker-internet/nginx/default.conf
    ```
    恢复 `server_name`：
    ```nginx
@@ -515,8 +515,8 @@ sudo chown -R www-data:www-data .well-known
 3. 重启容器：
    ```sh
    cd /var/www/lynx
-   sudo docker compose -f docker-compose.internet.ip.yml restart
-   sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
+   docker compose -f docker-compose.internet.ip.yml restart
+   docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
    ```
 
 #### **步骤 4：在 NPM 使用 Let's Encrypt**
@@ -560,55 +560,55 @@ sudo chown -R www-data:www-data .well-known
 
 ### **启动服务**
 ```sh
-sudo docker compose -f docker-compose.internet.ip.yml up -d
+docker compose -f docker-compose.internet.ip.yml up -d
 ```
 
 ### **停止服务**
 ```sh
-sudo docker compose -f docker-compose.internet.ip.yml down
+docker compose -f docker-compose.internet.ip.yml down
 ```
 
 ### **查看日志**
 ```sh
 # 查看应用日志
-sudo docker compose -f docker-compose.internet.ip.yml logs app
+docker compose -f docker-compose.internet.ip.yml logs app
 
 # 查看 Nginx 日志
-sudo docker compose -f docker-compose.internet.ip.yml logs nginx
+docker compose -f docker-compose.internet.ip.yml logs nginx
 
 # 实时查看日志
-sudo docker compose -f docker-compose.internet.ip.yml logs -f
+docker compose -f docker-compose.internet.ip.yml logs -f
 ```
 
 ### **更新代码后重新部署**
 ```sh
 cd /var/www/lynx  
-sudo git pull  
-sudo docker compose -f docker-compose.internet.ip.yml up -d --build  
+git pull  
+docker compose -f docker-compose.internet.ip.yml up -d --build  
 # 根据需要运行其他初始化命令
-sudo docker compose -f docker-compose.internet.ip.yml exec app composer install --no-dev --optimize-autoloader
-sudo docker compose -f docker-compose.internet.ip.yml exec app npm install
-sudo docker compose -f docker-compose.internet.ip.yml exec app npm run build
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan migrate --force
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear  
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize  
+docker compose -f docker-compose.internet.ip.yml exec app composer install --no-dev --optimize-autoloader
+docker compose -f docker-compose.internet.ip.yml exec app npm install
+docker compose -f docker-compose.internet.ip.yml exec app npm run build
+docker compose -f docker-compose.internet.ip.yml exec app php artisan migrate --force
+docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear  
+docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize  
 ```
 
 ### **清除缓存**
 ```sh
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan cache:clear
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan config:clear
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan route:clear
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan view:clear
+docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear
+docker compose -f docker-compose.internet.ip.yml exec app php artisan cache:clear
+docker compose -f docker-compose.internet.ip.yml exec app php artisan config:clear
+docker compose -f docker-compose.internet.ip.yml exec app php artisan route:clear
+docker compose -f docker-compose.internet.ip.yml exec app php artisan view:clear
 ```
 
 ### **重新优化**
 ```sh
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan config:cache
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan route:cache
-sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan view:cache
+docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
+docker compose -f docker-compose.internet.ip.yml exec app php artisan config:cache
+docker compose -f docker-compose.internet.ip.yml exec app php artisan route:cache
+docker compose -f docker-compose.internet.ip.yml exec app php artisan view:cache
 ```
 
 ---
@@ -650,13 +650,13 @@ sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan view:
 ### **无法访问应用**
 1. 检查容器是否正常运行：
    ```sh
-   sudo docker compose -f docker-compose.internet.ip.yml ps
+   docker compose -f docker-compose.internet.ip.yml ps
    ```
 2. 检查安全组是否放行 80/443 端口
 3. 检查 NPM 日志：
    ```sh
    cd /opt/npm
-   sudo docker compose logs
+   docker compose logs
    ```
 
 ### **HTTPS 无法访问**
@@ -664,16 +664,16 @@ sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan view:
 2. 确认证书已正确上传
 3. 检查防火墙是否拦截 443 端口：
    ```sh
-   sudo ufw status
-   sudo ufw allow 443/tcp
+   ufw status
+   ufw allow 443/tcp
    ```
 
 ### **页面样式错乱**
 1. 检查 `.env` 中的 `APP_URL` 是否正确（应为 `https://IP` 或 `https://域名`）
 2. 清除缓存并重新优化：
    ```sh
-   sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear
-   sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
+   docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear
+   docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
    ```
 3. 检查 Nginx 是否正确传递 `X-Forwarded-Proto` 头部
 
@@ -681,11 +681,11 @@ sudo docker compose -f docker-compose.internet.ip.yml exec app php artisan view:
 1. 检查 `.env` 中的数据库配置
 2. 确认 MySQL 容器正常运行：
    ```sh
-   sudo docker compose -f docker-compose.internet.ip.yml exec mysql mysql -u sail -p
+   docker compose -f docker-compose.internet.ip.yml exec mysql mysql -u sail -p
    ```
 3. 检查容器网络：
    ```sh
-   sudo docker network inspect lynx-internet_default
+   docker network inspect lynx-internet_default
    ```
 
 ---
