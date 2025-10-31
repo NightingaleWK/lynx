@@ -591,7 +591,7 @@ docker compose -f docker-compose.internet.ip.yml exec app npm install
 docker compose -f docker-compose.internet.ip.yml exec app npm run build
 docker compose -f docker-compose.internet.ip.yml exec app php artisan migrate --force
 docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize:clear  
-docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize  
+docker compose -f docker-compose.internet.ip.yml exec app php artisan optimize
 ```
 
 ### **清除缓存**
