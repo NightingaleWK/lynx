@@ -1,0 +1,13 @@
+{
+    "agents": [
+        "gemini"
+    ],
+    "editors": [
+        "gemini",
+        "vscode"
+    ],
+    "guidelines": [
+        "filament/filament"
+    ],
+    "sail": true
+}
