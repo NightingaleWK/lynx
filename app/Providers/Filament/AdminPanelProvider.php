@@ -21,6 +21,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -63,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 FilamentDeveloperLoginsPlugin::make()
                     ->enabled(app()->environment('local'))
                     ->users(fn() => User::pluck('email', 'name')->toArray())
+                    ->switchable(fn() => Auth::user()->id === 1),
             ])
             ->authMiddleware([
                 Authenticate::class,
