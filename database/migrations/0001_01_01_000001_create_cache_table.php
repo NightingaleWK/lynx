@@ -16,7 +16,7 @@ return new class extends Migration
             $table->mediumText('value')->comment('值');
             $table->integer('expiration')->index()->comment('过期时间');
 
-            $table->comment('运维管理平台-迁移任务');
+            $table->comment('缓存表');
         });
 
         Schema::create('cache_locks', function (Blueprint $table) {
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('owner')->comment('持有者');
             $table->integer('expiration')->index()->comment('过期时间');
 
-            $table->comment('运维管理平台-迁移任务');
+            $table->comment('缓存锁表');
         });
     }
 

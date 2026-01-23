@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('available_at')->comment('可用时间');
             $table->unsignedInteger('created_at')->comment('创建时间');
 
-            $table->comment('运维管理平台-迁移任务');
+            $table->comment('队列任务表');
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->integer('created_at')->comment('创建时间');
             $table->integer('finished_at')->nullable()->comment('完成时间');
 
-            $table->comment('运维管理平台-迁移任务');
+            $table->comment('任务批次表');
         });
 
         Schema::create('failed_jobs', function (Blueprint $table) {
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->longText('exception')->comment('异常信息');
             $table->timestamp('failed_at')->useCurrent()->comment('失败时间');
 
-            $table->comment('运维管理平台-迁移任务');
+            $table->comment('失败任务表');
         });
     }
 
