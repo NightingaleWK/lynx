@@ -43,7 +43,7 @@
                                 <div
                                     class="h-40 bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative group-hover:from-indigo-100 group-hover:to-purple-100 transition-colors">
                                     <span class="text-3xl">🍲</span>
-                                    <button wire:click="addToCart({{ $dish->id }})" @click="cartOpen = true"
+                                    <button wire:click="addToCart({{ $dish->id }})"
                                         class="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-primary-600 p-2 rounded-full shadow-sm hover:bg-primary-500 hover:text-white transition-all transform hover:scale-110 active:scale-95">
                                         <x-heroicon-m-plus class="w-5 h-5" />
                                     </button>

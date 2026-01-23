@@ -75,8 +75,6 @@ class OrderNow extends Page
                 'name' => $dish->name, // Cache name for UI
             ];
         }
-
-        $this->dispatch('open-cart');
     }
 
     public function removeFromCart($dishId)
