@@ -55,7 +55,6 @@ class OrderResource extends BaseResource
             'create' => CreateOrder::route('/create'),
             'view' => ViewOrder::route('/{record}'),
             'edit' => EditOrder::route('/{record}/edit'),
-            'order-now' => Pages\OrderNow::route('/order-now'),
         ];
     }
 }

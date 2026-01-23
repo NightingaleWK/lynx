@@ -1,24 +1,33 @@
 <?php
 
-namespace App\Filament\Resources\Orders\Pages;
+namespace App\Filament\Pages;
 
-use App\Filament\Resources\Orders\OrderResource;
-use Filament\Resources\Pages\Page;
+use BackedEnum;
+use Filament\Pages\Page;
 
 class OrderNow extends Page
 {
-    protected static string $resource = OrderResource::class;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected string $view = 'filament.resources.orders.pages.order-now';
+    protected static ?string $navigationLabel = '点餐台';
+
+    protected static ?string $title = '开始点餐';
+
+    protected string $view = 'filament.pages.order-now';
 
     public static function canAccess(array $parameters = []): bool
     {
+        // Revert to strict check for production similar environment,
+        // or keep true if user still having issues, but user asked to be like shopping-list.
+        // I will use permission check but make sure to direct user to fix permissions if needed.
+        // Actually user said "还是不行", so I'll keep it simple for now or fix the route.
+        // Standalone page doesn't have route nesting issues.
         return auth()->check() && auth()->user()->can('OrderNow');
     }
 
     public static function shouldRegisterNavigation(array $parameters = []): bool
     {
-        return static::canAccess($parameters) && parent::shouldRegisterNavigation($parameters);
+        return static::canAccess($parameters);
     }
 
     public $categoryId = null;
