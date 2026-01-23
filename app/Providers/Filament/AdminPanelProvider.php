@@ -3,7 +3,9 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Enums\NavigationGroup;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -58,6 +60,9 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make()
                     ->navigationGroup(NavigationGroup::System),
+                FilamentDeveloperLoginsPlugin::make()
+                    ->enabled(app()->environment('local'))
+                    ->users(fn() => User::pluck('email', 'name')->toArray())
             ])
             ->authMiddleware([
                 Authenticate::class,
