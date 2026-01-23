@@ -25,5 +25,22 @@ class UserSeeder extends Seeder
             '--user' => 1,
             '--panel' => 'admin',
         ]);
+
+        // 2. 创建 Partner 用户
+        $partners = [
+            ['name' => '敏敏', 'email' => 'minmin@admin.com'],
+        ];
+
+        foreach ($partners as $userData) {
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
+                [
+                    'name' => $userData['name'],
+                    'password' => Hash::make('Admin@123'),
+                ]
+            );
+
+            $user->assignRole('partner');
+        }
     }
 }
