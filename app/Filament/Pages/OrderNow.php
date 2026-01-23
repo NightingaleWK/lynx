@@ -5,9 +5,16 @@ namespace App\Filament\Pages;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Schema;
 
-class OrderNow extends Page
+class OrderNow extends Page implements HasForms
 {
+    use InteractsWithForms;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
 
     protected static ?string $navigationLabel = '点餐台';
@@ -33,14 +40,42 @@ class OrderNow extends Page
     public $cart = [];
 
     // Order Settings
-    public $mealDate;
-    public $mealPeriod = 'dinner';
-    public $chefNote = '';
-    public $customerNote = '';
+    public ?array $data = [];
 
     public function mount(): void
     {
-        $this->mealDate = now()->format('Y-m-d');
+        $this->form->fill([
+            'mealDate' => now()->format('Y-m-d'),
+            'mealPeriod' => 'dinner',
+        ]);
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                DatePicker::make('mealDate')
+                    ->label(__('When?'))
+                    ->displayFormat('Y-m-d')
+                    ->native(false)
+                    ->required(),
+                Select::make('mealPeriod')
+                    ->label(__('Kind?'))
+                    ->native(false)
+                    ->options([
+                        'lunch' => __('Lunch'),
+                        'dinner' => __('Dinner'),
+                        'snack' => __('Snack'),
+                    ])
+                    ->required(),
+                Textarea::make('customerNote')
+                    ->label(__('Special Requests?'))
+                    ->placeholder(__('e.g. Can we eat earlier?'))
+                    ->autosize()
+                    ->columnSpanFull(),
+            ])
+            ->statePath('data')
+            ->columns(2);
     }
 
     public function getCategoriesProperty()
@@ -99,12 +134,14 @@ class OrderNow extends Page
             return;
         }
 
+        $data = $this->form->getState();
+
         $order = \App\Models\Order::create([
             'user_id' => auth()->id(),
             'status' => 'pending',
-            'meal_date' => $this->mealDate,
-            'meal_period' => $this->mealPeriod,
-            'customer_note' => $this->customerNote,
+            'meal_date' => $data['mealDate'],
+            'meal_period' => $data['mealPeriod'],
+            'customer_note' => $data['customerNote'] ?? null,
         ]);
 
         foreach ($this->cart as $dishId => $item) {
@@ -120,6 +157,11 @@ class OrderNow extends Page
             ->success()
             ->send();
 
-        $this->reset(['cart', 'customerNote']);
+        $this->reset(['cart']);
+        $this->form->fill([
+            'mealDate' => now()->format('Y-m-d'),
+            'mealPeriod' => 'dinner',
+            'customerNote' => '',
+        ]);
     }
 }

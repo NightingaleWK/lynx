@@ -149,29 +149,7 @@
                         <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider">{{ __('Order Settings') }}
                         </h3>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500">{{ __('When?') }}</label>
-                                <input type="date" wire:model="mealDate"
-                                    class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500">{{ __('Kind?') }}</label>
-                                <select wire:model="mealPeriod"
-                                    class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                                    <option value="lunch">{{ __('Lunch') }}</option>
-                                    <option value="dinner">{{ __('Dinner') }}</option>
-                                    <option value="snack">{{ __('Snack') }}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500">{{ __('Special Requests?') }}</label>
-                            <textarea wire:model="customerNote" rows="2"
-                                class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500"
-                                placeholder="{{ __('e.g. Can we eat earlier?') }}"></textarea>
-                        </div>
+                        {{ $this->form }}
                     </div>
                 @endif
             </div>
