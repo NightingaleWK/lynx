@@ -71,6 +71,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
+            ->databaseNotifications()
+            ->sidebarCollapsibleOnDesktop()
+
             //
         ;
     }
