@@ -44,7 +44,7 @@
                                     class="h-40 bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative group-hover:from-indigo-100 group-hover:to-purple-100 transition-colors overflow-hidden">
                                     @if (!empty($dish->images) && isset($dish->images[0]))
                                         <img src="{{ Storage::url($dish->images[0]) }}" alt="{{ $dish->name }}"
-                                            class="w-full h-full object-cover">
+                                            class="w-full h-full object-cover object-center">
                                     @else
                                         <span class="text-3xl">🍲</span>
                                     @endif
@@ -134,7 +134,7 @@
                                 @endphp
                                 @if ($dish && !empty($dish->images) && isset($dish->images[0]))
                                     <img src="{{ Storage::url($dish->images[0]) }}" alt="{{ $item['name'] }}"
-                                        class="w-full h-full object-cover">
+                                        class="w-full h-full object-cover object-center">
                                 @else
                                     🍲
                                 @endif
