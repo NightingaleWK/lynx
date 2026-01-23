@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable()->comment('菜品描述');
             $table->timestamp('last_eaten_at')->nullable()->comment('上次食用时间');
             $table->integer('frequency')->default(0)->comment('食用频次');
+            $table->json('images')->nullable()->comment('菜品图片');
             $table->timestamps();
 
             $table->comment('菜品表');

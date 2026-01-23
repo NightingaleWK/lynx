@@ -39,10 +39,15 @@
                         @foreach ($this->dishes as $dish)
                             <div wire:key="dish-{{ $dish->id }}"
                                 class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-                                <!-- Placeholder Image -->
+                                {{-- Dish Image --}}
                                 <div
-                                    class="h-40 bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative group-hover:from-indigo-100 group-hover:to-purple-100 transition-colors">
-                                    <span class="text-3xl">🍲</span>
+                                    class="h-40 bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center relative group-hover:from-indigo-100 group-hover:to-purple-100 transition-colors overflow-hidden">
+                                    @if (!empty($dish->images) && isset($dish->images[0]))
+                                        <img src="{{ Storage::url($dish->images[0]) }}" alt="{{ $dish->name }}"
+                                            class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-3xl">🍲</span>
+                                    @endif
                                     <button wire:click="addToCart({{ $dish->id }})"
                                         class="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-primary-600 p-2 rounded-full shadow-sm hover:bg-primary-500 hover:text-white transition-all transform hover:scale-110 active:scale-95">
                                         <x-heroicon-m-plus class="w-5 h-5" />
@@ -123,8 +128,16 @@
                     @foreach ($cart as $dishId => $item)
                         <div wire:key="cart-item-{{ $dishId }}" class="flex gap-4 group">
                             <div
-                                class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-xl flex-shrink-0">
-                                🍲
+                                class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
+                                @php
+                                    $dish = \App\Models\Dish::find($dishId);
+                                @endphp
+                                @if ($dish && !empty($dish->images) && isset($dish->images[0]))
+                                    <img src="{{ Storage::url($dish->images[0]) }}" alt="{{ $item['name'] }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    🍲
+                                @endif
                             </div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-start mb-1">

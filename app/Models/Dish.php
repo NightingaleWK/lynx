@@ -12,6 +12,7 @@ class Dish extends Model
         'last_eaten_at' => 'datetime',
         'frequency' => 'integer',
         'category_id' => 'integer',
+        'images' => 'array',
     ];
 
     public function category()

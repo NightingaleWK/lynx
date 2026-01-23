@@ -8,5 +8,8 @@ return [
         'description' => '菜品描述',
         'last_eaten_at' => '上次食用时间',
         'frequency' => '食用频次',
+        'images' => '图片',
+        'created_at' => '创建时间',
+        'updated_at' => '更新时间',
     ],
 ];

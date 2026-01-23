@@ -52,7 +52,6 @@ erDiagram
         timestamp last\_eaten\_at "上次食用时间 (冗余字段)"  
         int frequency "点单次数 (冗余字段)"  
         %% Tags 使用 spatie/laravel-tags  
-        %% Images 使用 spatie/laravel-medialibrary  
     }
 
     %% 核心关联：双轨制食材记录  

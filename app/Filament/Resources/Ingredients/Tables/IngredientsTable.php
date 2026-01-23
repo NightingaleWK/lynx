@@ -18,14 +18,18 @@ class IngredientsTable
                 TextColumn::make('aisle_id')
                     ->numeric()
                     ->sortable(),
+
                 TextColumn::make('name')
                     ->searchable(),
+
                 TextColumn::make('base_unit')
                     ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
