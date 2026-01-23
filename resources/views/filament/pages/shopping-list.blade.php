@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     @if (empty($shoppingList))
         <div class="p-6 text-center text-gray-500">
-            No orders selected. Please select orders from the "My Orders" table and click "Generate Shopping List".
+            {{ __('No orders selected. Please select orders from the "My Orders" table and click "Generate Shopping List".') }}
         </div>
     @else
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

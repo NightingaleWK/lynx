@@ -4,10 +4,11 @@ namespace App\Filament\Pages;
 
 use BackedEnum;
 use Filament\Pages\Page;
+use Filament\Support\Icons\Heroicon;
 
 class OrderNow extends Page
 {
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
 
     protected static ?string $navigationLabel = '点餐台';
 
@@ -17,11 +18,6 @@ class OrderNow extends Page
 
     public static function canAccess(array $parameters = []): bool
     {
-        // Revert to strict check for production similar environment,
-        // or keep true if user still having issues, but user asked to be like shopping-list.
-        // I will use permission check but make sure to direct user to fix permissions if needed.
-        // Actually user said "还是不行", so I'll keep it simple for now or fix the route.
-        // Standalone page doesn't have route nesting issues.
         return auth()->check() && auth()->user()->can('OrderNow');
     }
 
@@ -125,6 +121,5 @@ class OrderNow extends Page
             ->send();
 
         $this->reset(['cart', 'customerNote']);
-        // Redirect or stay? Let's stay for now.
     }
 }

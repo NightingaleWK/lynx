@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\IngredientAisles;
 
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\IngredientAisles\Pages\CreateIngredientAisle;
 use App\Filament\Resources\IngredientAisles\Pages\EditIngredientAisle;
@@ -12,16 +13,18 @@ use App\Filament\Resources\IngredientAisles\Schemas\IngredientAisleInfolist;
 use App\Filament\Resources\IngredientAisles\Tables\IngredientAislesTable;
 use App\Models\IngredientAisle;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class IngredientAisleResource extends BaseResource
 {
     protected static ?string $model = IngredientAisle::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Ingredient;
 
     protected static ?string $recordTitleAttribute = 'name';
 

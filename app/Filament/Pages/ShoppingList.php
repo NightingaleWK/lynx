@@ -4,10 +4,16 @@ namespace App\Filament\Pages;
 
 use BackedEnum;
 use Filament\Pages\Page;
+use Filament\Support\Icons\Heroicon;
+use App\Enums\IngredientUnit;
 
 class ShoppingList extends Page
 {
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
+
+    protected static ?string $navigationLabel = '采购单';
+
+    protected static ?string $title = '采购单';
 
     protected string $view = 'filament.pages.shopping-list';
 
@@ -23,13 +29,13 @@ class ShoppingList extends Page
         foreach ($orders as $order) {
             foreach ($order->items as $item) {
                 foreach ($item->dish->ingredients as $ing) {
-                    $aisle = $ing->aisle->name ?? 'Uncategorized';
+                    $aisle = $ing->aisle->name ?? __('Uncategorized');
                     $key = $ing->id;
 
                     if (! isset($list[$aisle][$key])) {
                         $list[$aisle][$key] = [
                             'name' => $ing->name,
-                            'unit' => $ing->pivot->unit,
+                            'unit' => IngredientUnit::tryFrom($ing->pivot->unit)?->getLabel() ?? $ing->pivot->unit,
                             'total_qty' => 0,
                             'remarks' => [],
                         ];

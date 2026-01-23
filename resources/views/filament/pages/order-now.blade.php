@@ -5,7 +5,7 @@
             <div class="w-64 flex-shrink-0 hidden md:flex flex-col gap-2 overflow-y-auto pr-2">
                 <button wire:click="$set('categoryId', null)"
                     class="text-left px-4 py-3 rounded-xl transition-all duration-200 @if (is_null($categoryId)) bg-primary-50 text-primary-600 font-bold ring-1 ring-primary-500/20 shadow-sm @else hover:bg-gray-50 text-gray-600 @endif">
-                    🔥 All Dishes
+                    🔥 {{ __('All Dishes') }}
                 </button>
                 @foreach ($this->categories as $category)
                     <button wire:click="$set('categoryId', {{ $category->id }})"
@@ -29,7 +29,7 @@
                         </div>
                         <input wire:model.live.debounce.300ms="search" type="search"
                             class="block w-full pl-10 pr-3 py-2.5 border-none ring-1 ring-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-primary-500 transition-shadow shadow-sm placeholder-gray-400"
-                            placeholder="Search for your cravings...">
+                            placeholder="{{ __('Search for your cravings...') }}">
                     </div>
                 </div>
 
@@ -57,13 +57,13 @@
                                     </div>
 
                                     <p class="text-xs text-gray-500 line-clamp-2 mb-3 h-8">
-                                        {{ $dish->description ?? 'Delicious homemade goodness.' }}
+                                        {{ $dish->description ?? __('Delicious homemade goodness.') }}
                                     </p>
 
                                     <div class="flex items-center gap-2 text-xs text-gray-400">
                                         <span class="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md">
                                             <x-heroicon-m-calendar class="w-3 h-3" />
-                                            {{ $dish->last_eaten_at ? \Carbon\Carbon::parse($dish->last_eaten_at)->diffForHumans() : 'Never' }}
+                                            {{ $dish->last_eaten_at ? \Carbon\Carbon::parse($dish->last_eaten_at)->diffForHumans() : __('Never') }}
                                         </span>
                                         <span class="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md">
                                             <x-heroicon-m-arrow-path class="w-3 h-3" />
@@ -103,8 +103,8 @@
             <!-- Drawer Header -->
             <div class="p-6 border-b border-gray-100 bg-white z-10 flex justify-between items-center">
                 <div>
-                    <h2 class="text-xl font-black text-gray-800">Your Tray</h2>
-                    <p class="text-sm text-gray-500">Ready for service?</p>
+                    <h2 class="text-xl font-black text-gray-800">{{ __('Your Tray') }}</h2>
+                    <p class="text-sm text-gray-500">{{ __('Ready for service?') }}</p>
                 </div>
                 <!-- Modify Close Button to support desktop -->
                 <button @click="cartOpen = false" class="text-gray-400 hover:text-gray-600">
@@ -117,7 +117,7 @@
                 @if (empty($cart))
                     <div class="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-50">
                         <x-heroicon-o-shopping-bag class="w-16 h-16 text-gray-300" />
-                        <p class="text-gray-500">Your tray is empty.</p>
+                        <p class="text-gray-500">{{ __('Your tray is empty.') }}</p>
                     </div>
                 @else
                     @foreach ($cart as $dishId => $item)
@@ -139,37 +139,38 @@
                                 </div>
                                 <input wire:model.live.debounce.500ms="cart.{{ $dishId }}.note" type="text"
                                     class="w-full text-xs border-0 bg-gray-50 rounded-md focus:ring-1 focus:ring-primary-500 placeholder-gray-400 py-1.5 px-3"
-                                    placeholder="Note: e.g. Less spicy">
+                                    placeholder="{{ __('Note: e.g. Less spicy') }}">
                             </div>
                         </div>
                     @endforeach
 
                     <!-- Meal Settings -->
                     <div class="border-t border-gray-100 pt-6 mt-6 space-y-4">
-                        <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider">Order Settings</h3>
+                        <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider">{{ __('Order Settings') }}
+                        </h3>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500">When?</label>
+                                <label class="text-xs font-medium text-gray-500">{{ __('When?') }}</label>
                                 <input type="date" wire:model="mealDate"
                                     class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                             </div>
                             <div class="space-y-1">
-                                <label class="text-xs font-medium text-gray-500">Kind?</label>
+                                <label class="text-xs font-medium text-gray-500">{{ __('Kind?') }}</label>
                                 <select wire:model="mealPeriod"
                                     class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                                    <option value="lunch">Lunch</option>
-                                    <option value="dinner">Dinner</option>
-                                    <option value="snack">Snack</option>
+                                    <option value="lunch">{{ __('Lunch') }}</option>
+                                    <option value="dinner">{{ __('Dinner') }}</option>
+                                    <option value="snack">{{ __('Snack') }}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-xs font-medium text-gray-500">Special Requests?</label>
+                            <label class="text-xs font-medium text-gray-500">{{ __('Special Requests?') }}</label>
                             <textarea wire:model="customerNote" rows="2"
                                 class="block w-full text-sm border-gray-200 rounded-lg focus:ring-primary-500 focus:border-primary-500"
-                                placeholder="e.g. Can we eat earlier?"></textarea>
+                                placeholder="{{ __('e.g. Can we eat earlier?') }}"></textarea>
                         </div>
                     </div>
                 @endif
@@ -180,7 +181,7 @@
                 <div class="p-6 border-t border-gray-100 bg-gray-50">
                     <button wire:click="submitOrder" wire:loading.attr="disabled"
                         class="w-full bg-primary-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary-500/30 hover:bg-primary-700 hover:shadow-primary-500/50 transition-all transform active:scale-95 flex justify-center items-center gap-2">
-                        <span wire:loading.remove>Place Order</span>
+                        <span wire:loading.remove>{{ __('Place Order') }}</span>
                         <span wire:loading class="animate-spin">🌀</span>
                     </button>
                 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Ingredients;
 
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Ingredients\Pages\CreateIngredient;
 use App\Filament\Resources\Ingredients\Pages\EditIngredient;
@@ -16,12 +17,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class IngredientResource extends BaseResource
 {
     protected static ?string $model = Ingredient::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Ingredient;
 
     protected static ?string $recordTitleAttribute = 'name';
 

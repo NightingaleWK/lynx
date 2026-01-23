@@ -22,7 +22,7 @@ class OrdersTable
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Customer')
+                    ->label(__('Customer'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
@@ -43,7 +43,7 @@ class OrdersTable
                     ->searchable(),
                 TextColumn::make('items_count')
                     ->counts('items')
-                    ->label('Dishes'),
+                    ->label(__('Dishes')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -52,10 +52,10 @@ class OrdersTable
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'pending' => 'Pending',
-                        'processing' => 'Processing',
-                        'served' => 'Served',
-                        'completed' => 'Completed',
+                        'pending' => __('Pending'),
+                        'processing' => __('Processing'),
+                        'served' => __('Served'),
+                        'completed' => __('Completed'),
                     ]),
                 Tables\Filters\SelectFilter::make('meal_period')
                     ->options([
@@ -91,7 +91,7 @@ class OrdersTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     BulkAction::make('shopping_list')
-                        ->label('Generate Shopping List')
+                        ->label(__('Generate Shopping List'))
                         ->icon('heroicon-o-shopping-cart')
                         ->action(fn(Collection $records) => redirect()->route('filament.admin.pages.shopping-list', ['orders' => $records->pluck('id')->implode(',')]))
                         ->deselectRecordsAfterCompletion(),

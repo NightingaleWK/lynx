@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Dishes;
 
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Dishes\Pages\CreateDish;
 use App\Filament\Resources\Dishes\Pages\EditDish;
@@ -16,12 +17,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class DishResource extends BaseResource
 {
     protected static ?string $model = Dish::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Dish;
 
     protected static ?string $recordTitleAttribute = 'name';
 
