@@ -65,12 +65,18 @@ class OrderNow extends Page
         if (isset($this->cart[$dishId])) {
             $this->cart[$dishId]['qty']++;
         } else {
+            $dish = \App\Models\Dish::find($dishId);
+            if (! $dish) {
+                return;
+            }
             $this->cart[$dishId] = [
                 'qty' => 1,
                 'note' => '',
-                'name' => \App\Models\Dish::find($dishId)->name, // Cache name for UI
+                'name' => $dish->name, // Cache name for UI
             ];
         }
+
+        $this->dispatch('open-cart');
     }
 
     public function removeFromCart($dishId)
