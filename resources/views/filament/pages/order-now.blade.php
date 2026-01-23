@@ -4,12 +4,12 @@
             <!-- Sidebar: Categories -->
             <div class="w-64 flex-shrink-0 hidden md:flex flex-col gap-2 overflow-y-auto pr-2">
                 <button wire:click="$set('categoryId', null)"
-                    class="text-left px-4 py-3 rounded-xl transition-all duration-200 @if (is_null($categoryId)) bg-primary-50 text-primary-600 font-bold ring-1 ring-primary-500/20 shadow-sm @else hover:bg-gray-50 text-gray-600 @endif">
+                    class="text-left px-4 py-3 rounded-xl transition-all duration-200 @if (is_null($categoryId)) bg-primary-50 text-primary-600 font-bold shadow-sm @else hover:bg-gray-50 text-gray-600 @endif">
                     🔥 {{ __('All Dishes') }}
                 </button>
                 @foreach ($this->categories as $category)
                     <button wire:click="$set('categoryId', {{ $category->id }})"
-                        class="text-left px-4 py-3 rounded-xl transition-all duration-200 flex justify-between items-center group @if ($categoryId === $category->id) bg-primary-50 text-primary-600 font-bold ring-1 ring-primary-500/20 shadow-sm @else hover:bg-gray-50 text-gray-600 @endif">
+                        class="text-left px-4 py-3 rounded-xl transition-all duration-200 flex justify-between items-center group @if ($categoryId === $category->id) bg-primary-50 text-primary-600 font-bold shadow-sm @else hover:bg-gray-50 text-gray-600 @endif">
                         <span>{{ $category->name }}</span>
                         <span
                             class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full group-hover:bg-white transition-colors">
