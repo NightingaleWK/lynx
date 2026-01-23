@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Dishes;
 
+use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Dishes\Pages\CreateDish;
 use App\Filament\Resources\Dishes\Pages\EditDish;
 use App\Filament\Resources\Dishes\Pages\ListDishes;
@@ -16,7 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class DishResource extends Resource
+class DishResource extends BaseResource
 {
     protected static ?string $model = Dish::class;
 

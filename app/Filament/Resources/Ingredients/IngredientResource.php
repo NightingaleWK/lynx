@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Ingredients;
 
+use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Ingredients\Pages\CreateIngredient;
 use App\Filament\Resources\Ingredients\Pages\EditIngredient;
 use App\Filament\Resources\Ingredients\Pages\ListIngredients;
@@ -16,7 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class IngredientResource extends Resource
+class IngredientResource extends BaseResource
 {
     protected static ?string $model = Ingredient::class;
 

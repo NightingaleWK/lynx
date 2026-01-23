@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\IngredientAisles;
 
+use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\IngredientAisles\Pages\CreateIngredientAisle;
 use App\Filament\Resources\IngredientAisles\Pages\EditIngredientAisle;
 use App\Filament\Resources\IngredientAisles\Pages\ListIngredientAisles;
@@ -16,7 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class IngredientAisleResource extends Resource
+class IngredientAisleResource extends BaseResource
 {
     protected static ?string $model = IngredientAisle::class;
 
