@@ -1,4 +1,433 @@
 <laravel-boost-guidelines>
+=== .ai/system-design rules ===
+
+# **KitchenOS \- 家庭智能点餐系统 V1.1 架构设计书**
+
+**版本**: 1.1 (适配 Filament Shield & Laravel Lang)
+
+**技术栈**: Laravel 12 \+ Filament V5 \+ **Filament Shield** \+ **Laravel Lang**
+
+**核心理念**: 前端极简体验（SPA感），后端严谨数据（双轨制），生活流逻辑（备餐计划）。
+
+## **1\. 核心实体关系图 (ER Diagram)**
+
+**变更说明**: 移除了 USERS 表的 role 字段，权限管理完全委托给 Filament Shield (基于 spatie/laravel-permission)。
+
+erDiagram  
+    %% 用户与权限 (由 Filament Shield 管理)  
+    USERS {  
+        bigint id PK  
+        string name  
+        string email  
+        %% role 字段已移除，改为关联 model\_has\_roles 表  
+    }  
+      
+    ROLES {  
+        bigint id PK  
+        string name "super\_admin, partner"  
+    }
+
+    %% 基础数据：食材与购买分区  
+    INGREDIENT\_AISLES {  
+        bigint id PK  
+        string name "肉禽蛋, 果蔬, 调味"  
+        int sort\_order "购买动线排序"  
+    }  
+      
+    INGREDIENTS {  
+        bigint id PK  
+        string name "猪里脊, 盐"  
+        string base\_unit "g, ml, pc (系统基准单位)"  
+        bigint aisle\_id FK  
+    }
+
+    %% 菜谱 (核心资产)  
+    CATEGORIES {  
+        bigint id PK  
+        string name "热菜, 凉菜, 汤羹"  
+    }  
+      
+    DISHES {  
+        bigint id PK  
+        string name  
+        bigint category\_id FK  
+        text description  
+        timestamp last\_eaten\_at "上次食用时间 (冗余字段)"  
+        int frequency "点单次数 (冗余字段)"  
+        %% Tags 使用 spatie/laravel-tags  
+        %% Images 使用 spatie/laravel-medialibrary  
+    }
+
+    %% 核心关联：双轨制食材记录  
+    DISH\_INGREDIENT {  
+        bigint dish\_id FK  
+        bigint ingredient\_id FK  
+        decimal quantity "数值轨: 15.00 (用于计算)"  
+        string unit "快照轨: g (防止单位变更)"  
+        string remark "文本轨: 2勺, 少许 (用于展示)"  
+    }
+
+    %% 订单流  
+    ORDERS {  
+        bigint id PK  
+        bigint user\_id FK  
+        string status "draft, pending, processing, served, completed"  
+        date meal\_date "用餐日期: 2025-10-01"  
+        string meal\_period "lunch, dinner, snack"  
+        text chef\_note "大厨备注"  
+        text customer\_note "整单备注"  
+    }
+
+    ORDER\_ITEMS {  
+        bigint id PK  
+        bigint order\_id FK  
+        bigint dish\_id FK  
+        int quantity "份数"  
+        string note "单品备注: 少辣"  
+    }
+
+    %% 评价系统  
+    REVIEWS {  
+        bigint id PK  
+        bigint order\_id FK  
+        int rating "整单评分 1-5"  
+        text comment  
+        %% Images 关联买家秀  
+    }  
+      
+    REVIEW\_ITEMS {  
+        bigint id PK  
+        bigint review\_id FK  
+        bigint dish\_id FK  
+        int rating "单品评分"  
+    }
+
+    %% 关系连线  
+    USERS }|--|{ ROLES : "has\_roles"  
+    INGREDIENT\_AISLES ||--|{ INGREDIENTS : "contains"  
+    CATEGORIES ||--|{ DISHES : "classifies"  
+    DISHES ||--|{ DISH\_INGREDIENT : "requires"  
+    INGREDIENTS ||--|{ DISH\_INGREDIENT : "used\_in"  
+    USERS ||--o{ ORDERS : "places"  
+    ORDERS ||--|{ ORDER\_ITEMS : "contains"  
+    DISHES ||--|{ ORDER\_ITEMS : "ordered"  
+    ORDERS ||--o| REVIEWS : "has"  
+    REVIEWS ||--|{ REVIEW\_ITEMS : "details"
+
+## **2\. 数据库迁移定义 (Migrations)**
+
+### **2.0 权限表 (Shield)**
+
+* **Action**: 运行 php artisan vendor:publish \--provider="Spatie\Permission\PermissionServiceProvider" 发布 migration。  
+* **Action**: 运行 php artisan shield:install 会自动配置 Shield 所需表结构。
+
+### **2.1 基础表 (Base Tables)**
+
+// create\_ingredients\_table.php  
+Schema::create('ingredients', function (Blueprint $table) {  
+    $table-\>id();  
+    $table-\>foreignId('aisle\_id')-\>constrained('ingredient\_aisles'); // 购买分区  
+    $table-\>string('name');  
+    $table-\>string('base\_unit'); // Enum: 'g', 'ml', 'pc'  
+    $table-\>timestamps();  
+});
+
+// create\_dishes\_table.php  
+Schema::create('dishes', function (Blueprint $table) {  
+    $table-\>id();  
+    $table-\>foreignId('category\_id')-\>constrained();  
+    $table-\>string('name');  
+    $table-\>text('description')-\>nullable();  
+      
+    // 辅助选菜的冗余字段  
+    $table-\>timestamp('last\_eaten\_at')-\>nullable();  
+    $table-\>integer('frequency')-\>default(0);  
+      
+    $table-\>timestamps();  
+});
+
+### **2.2 核心中间表 (The Pivot)**
+
+// create\_dish\_ingredient\_table.php  
+Schema::create('dish\_ingredient', function (Blueprint $table) {  
+    $table-\>id();  
+    $table-\>foreignId('dish\_id')-\>constrained()-\>cascadeOnDelete();  
+    $table-\>foreignId('ingredient\_id')-\>constrained()-\>cascadeOnDelete();  
+      
+    // 双轨制核心  
+    $table-\>decimal('quantity', 10, 2)-\>default(0); // 轨道1：计算用 (如 15.00)  
+    $table-\>string('unit');                         // 快照：存当时的 base\_unit  
+    $table-\>string('remark')-\>nullable();           // 轨道2：展示用 (如 "2勺", "适量")  
+      
+    $table-\>timestamps();  
+});
+
+### **2.3 订单表 (Orders)**
+
+// create\_orders\_table.php  
+Schema::create('orders', function (Blueprint $table) {  
+    $table-\>id();  
+    $table-\>foreignId('user\_id')-\>constrained();  
+      
+    // 状态机  
+    $table-\>string('status')-\>default('pending'); // pending, processing, served, completed  
+      
+    // 用餐计划 (核心约束：一单一时)  
+    $table-\>date('meal\_date');  
+    $table-\>string('meal\_period'); // Enum: lunch, dinner, snack  
+      
+    $table-\>text('customer\_note')-\>nullable(); // 对象说：我想吃早点  
+    $table-\>text('chef\_note')-\>nullable();     // 你说：没肉了换成了豆腐  
+      
+    $table-\>timestamps();  
+});
+
+## **3\. Filament & Shield 权限规划**
+
+引入 Shield 后，我们不再手写 Policy 文件，而是通过 **UI 配置** 或 **Seeder** 来管理角色。
+
+### **3.1 角色定义 (Roles)**
+
+需要在 Shield 界面（/admin/shield/roles）创建以下两个角色：
+
+|
+
+| **角色名称** | **标识 (Name)** | **描述** | **权限配置逻辑 (Shield UI)** |
+
+| **大厨** | super\_admin | 系统拥有者 | **默认拥有所有权限**（Shield 默认行为）。无需额外配置。 |
+
+| **点餐员** | partner | 顾客对象 | **按需勾选**： 1\. Order: view\_any, view, create 2\. Page: view\_order\_now (点餐台) 3\. Dish, Ingredient: **不勾选** (不可见) |
+
+### **3.2 资源与权限映射表**
+
+| **资源/页面** | **Shield 权限名称 (自动生成)** | **Partner 角色配置** | **备注** |
+
+| **Page: OrderNow** | page\_OrderNow | ✅ 允许 | 核心点餐页面 |
+
+| **Resource: Order** | view\_any\_order | ✅ 允许 | 仅能查看自己的订单 (需配合 Scope) |
+
+| **Resource: Dish** | view\_any\_dish | ❌ 禁止 | 只有大厨能管理菜谱 |
+
+| **Resource: Ingredient** | view\_any\_ingredient | ❌ 禁止 | 只有大厨能管理库存 |
+
+| **Widget: Stats** | widget\_StatsOverview | ❌ 禁止 | 不给看复杂的报表 |
+
+### **3.3 本地化配置 (Laravel Lang)**
+
+为了让界面显示中文（包括 Shield 的权限名称）：
+
+1. **Config**: 修改 config/app.php: 'locale' \=\> 'zh\_CN', 'timezone' \=\> 'Asia/Shanghai'.  
+2. **Publish**: 运行 php artisan lang:publish。  
+3. **Filament Panel**: 在 AdminPanelProvider.php 中无需额外配置，它会自动跟随 app.locale。  
+4. **Shield 汉化**: Shield 的权限名称默认是英文（如 view\_any\_order），可以通过发布 Shield 的语言包进行翻译，或者直接看习惯就好。
+
+## **4\. 核心业务逻辑代码**
+
+### **4.1 单位枚举 (Unit Enum)**
+
+namespace App\Enums;
+
+use Filament\Support\Contracts\HasLabel;
+
+enum IngredientUnit: string implements HasLabel  
+{  
+    case Gram \= 'g';  
+    case Milliliter \= 'ml';  
+    case Piece \= 'pc';
+
+    public function getLabel(): ?string  
+    {  
+        return match($this) {  
+            self::Gram \=\> '克 (g)',  
+            self::Milliliter \=\> '毫升 (ml)',  
+            self::Piece \=\> '个/只/瓣',  
+        };  
+    }  
+}
+
+### **4.2 采购清单聚合逻辑 (Shopping List Aggregation)**
+
+实现位置建议：OrderResource \-\> BulkAction。
+
+// In OrderResource / Actions / GenerateShoppingList  
+public function handle(Collection $orders)  
+{  
+    // 1\. 初始化清单结构，按【购买分区】分组  
+    // 结果结构: \['肉禽蛋' \=\> \[ '猪肉' \=\> \[...\], '鸡蛋' \=\> \[...\] \]\]  
+    $shoppingList \= \[\];
+
+    foreach ($orders as $order) {  
+        foreach ($order-\>items as $item) {  
+            // 加载菜谱对应的食材  
+            $ingredients \= $item-\>dish-\>ingredients;   
+              
+            foreach ($ingredients as $ing) {  
+                $aisle \= $ing-\>aisle-\>name; // 分区名  
+                $key \= $ing-\>id; // 以食材ID为键，自动去重  
+                  
+                if (\!isset($shoppingList\[$aisle\]\[$key\])) {  
+                    $shoppingList\[$aisle\]\[$key\] \= \[  
+                        'name' \=\> $ing-\>name,  
+                        'total\_qty' \=\> 0,  
+                        'unit' \=\> $ing-\>pivot-\>unit,  
+                        'remarks' \=\> \[\], // 收集所有备注  
+                    \];  
+                }  
+                  
+                // \=== 双轨逻辑 \===  
+                  
+                // 轨道 1: 绝对数值累加 (用于做大数计算)  
+                // 比如: 150g \+ 200g \= 350g  
+                $neededQty \= $ing-\>pivot-\>quantity \* $item-\>quantity;  
+                $shoppingList\[$aisle\]\[$key\]\['total\_qty'\] \+= $neededQty;  
+                  
+                // 轨道 2: 备注收集 (用于辅助决策)  
+                // 比如: \["少许", "2勺"\]  
+                if (\!empty($ing-\>pivot-\>remark)) {  
+                     // 简单的去重逻辑，防止出现 10个 "适量"  
+                    if (\!in\_array($ing-\>pivot-\>remark, $shoppingList\[$aisle\]\[$key\]\['remarks'\])) {  
+                        $shoppingList\[$aisle\]\[$key\]\['remarks'\]\[\] \= $ing-\>pivot-\>remark;  
+                    }  
+                }  
+            }  
+        }  
+    }  
+      
+    // 2\. 将 $shoppingList 传递给 Blade View 渲染模态窗  
+    // 前端展示逻辑：  
+    // \- 如果 total\_qty \> 0，显示 "350g"  
+    // \- 如果 remarks 有值，显示 "(备注: 2勺, 少许)"  
+      
+    return $shoppingList;  
+}
+
+### **4.3 定制点餐页 (OrderNow with Shield)**
+
+确保 Shield 生成了 Page 权限，并在 OrderNow 页面类中添加权限检查。
+
+// App/Filament/Pages/OrderNow.php
+
+use BezhanSalleh\FilamentShield\Traits\HasPageShield; // 引入 Shield Trait
+
+class OrderNow extends Page  
+{  
+    use HasPageShield; // 自动启用权限控制
+
+    protected static string $view \= 'filament.pages.order-now';  
+      
+    // ... Livewire 逻辑 (addToCart, openCartAction) ...  
+}
+
+## **5\. 实施 Checklist (更新版)**
+
+1. **环境配置**:  
+   * 配置 .env 数据库。  
+   * 配置 config/app.php 为 zh\_CN。  
+   * 运行 php artisan shield:install (选择 Yes 覆盖默认 Policy)。  
+2. **数据结构**:  
+   * 创建所有 Migration (ingredients, dishes, orders...)。  
+   * 运行 php artisan migrate。  
+3. **权限初始化 (Shield)**:  
+   * 运行 php artisan shield:generate \--all (为所有 Resource/Page 生成权限)。  
+   * 创建第一个超级用户: php artisan shield:super-admin (这就是**大厨**账号)。  
+   * 登录后台，在 "Shield \> Roles" 中新建角色 partner。  
+   * 在 partner 角色中，**仅勾选** OrderNow 页面权限和 Order 的基础查看权限。  
+   * 创建对象账号，并分配 partner 角色。  
+4. **业务开发**:  
+   * 开发 IngredientResource & DishResource (大厨专用)。  
+   * 开发 OrderNow 自定义页面 (核心难点)。  
+5. **验证**:  
+   * 使用 partner 账号登录，确保看不到 "Users", "Roles", "Dishes" 等菜单，只能看到 "点餐台" 和 "我的订单"。
+
+=== .ai/system-description rules ===
+
+# **Lynx (铃可)：为爱烹饪的家庭私厨数字化系统**
+
+**项目代号**: Lynx (铃可)
+
+**核心愿景**: 让柴米油盐拥有数字化仪式感，解决“今天吃什么”的世纪难题。
+
+## **1\. 项目背景与初衷**
+
+在快节奏的现代生活中，家庭烹饪往往面临两个极端的挑战：
+
+1. **决策疲劳**：每天面对“今天吃什么”、“家里还有什么菜”、“去超市买什么”的重复决策。  
+2. **数据断层**：即使记住了几个拿手菜，但具体的配方（多少克盐、多少勺酱油）往往依赖模糊的记忆，导致出品不稳定；同时，去超市采购时常因遗漏食材而往返奔波。
+
+**Lynx (铃可)** 应运而生。它不是一个简单的记事本，而是一套基于 **Laravel 12** 和 **Filament V5** 打造的、工业级标准的家庭餐饮管理系统。它专为二人世界设计，将“大厨”的严谨后勤与“顾客”的沉浸式点餐体验完美融合，为琐碎的家务注入科技的秩序与生活的温情。
+
+## **2\. 角色定位与互动模式**
+
+系统设计了两个核心角色，分别对应家庭中的不同分工，创造出一种类似“私房菜馆”的情趣互动：
+
+### **👨‍🍳 大厨 (The Chef) \- 系统管理员**
+
+* **定位**：后勤总管、烹饪执行者、系统上帝。  
+* **权限与职责**：  
+  * **菜谱研发**：录入并维护独家菜谱，精确把控食材配比。  
+  * **库存调度**：拥有“霸道”的改单权。如果当天食材不足，可以直接修改订单内容，并通知顾客。  
+  * **采购管理**：一键生成采购清单，统筹未来几顿饭的物资需求。
+
+### **👩‍💼 顾客 (The Partner) \- 首席体验官**
+
+* **定位**：享受服务者、口味决策者、美食品鉴家。  
+* **权限与体验**：  
+  * **沉浸点餐**：享受类似外卖 App 的点餐体验，无需关心库存和复杂的后台逻辑。  
+  * **用餐规划**：决定是“今晚吃”还是“明天中午带饭”。  
+  * **餐后评价**：对菜品进行打分和点评，上传“买家秀”，激励大厨精进厨艺。
+
+## **3\. 核心功能场景描述**
+
+### **3.1 沉浸式点餐台 (The Order Experience)**
+
+告别枯燥的表格录入，我们为“顾客”打造了一个**全屏沉浸式的点餐页面**。
+
+* **视觉盛宴**：所有菜品以瀑布流卡片形式呈现，高清大图直击食欲。  
+* **灵感标签**：通过“\#酸甜口”、“\#肉食动物”、“\#快手菜”等标签快速筛选，解决选择困难症。  
+* **无缝加购**：点击加号，菜品飞入右下角的悬浮购物车。  
+* **抽屉式结算**：点击购物车，侧滑抽屉展开。在这里，顾客可以备注“少辣”、“多葱”，并使用**智能时间胶囊**选择用餐时间（如“今晚”或“明午”），一键下单，流程如丝般顺滑。
+
+### **3.2 双轨制食材管理 (Dual-Track Ingredient System)**
+
+这是本系统最核心的“黑科技”，解决了现实世界的模糊性与计算机精确性之间的矛盾。
+
+* **痛点**：做菜时我们说“少许”、“两勺”，但买菜时我们需要知道“500克”、“1瓶”。  
+* **解决方案**：  
+  * **计算轨**：系统底层记录精确数值（如 15ml, 20g），用于后台自动合并计算采购总量。  
+  * **展示轨**：前端界面展示“人话”备注（如 2勺, 半个），符合烹饪时的直觉。  
+  * **效果**：大厨在录入时虽然辛苦一点（需定义标准），但在生成采购清单时，系统能精准告诉你：“你需要买 500g 猪肉”，而在做菜时，菜谱上显示的又是亲切的“猪肉一块”。
+
+### **3.3 智能采购助手 (Smart Shopping List)**
+
+当确定了未来几天的菜单后，大厨无需手写购物清单。
+
+* **一键合并**：选中“周六午餐”和“周六晚餐”的订单，系统自动合并同类项。  
+* **动线分区**：生成的清单不是乱序的，而是根据超市的货架逻辑，自动分为“肉禽蛋区”、“果蔬区”、“调味干货区”。  
+* **查漏补缺**：清单生成后，大厨可拿着手机核对冰箱库存，勾选已有的，只买缺少的，彻底告别“买多了”或“忘买了”。
+
+### **3.4 闭环评价体系 (Feedback Loop)**
+
+每一顿饭的结束，都是下一次优化的开始。
+
+* 订单完成后，顾客可以对整顿饭进行 1-5 星打分，并撰写评语。  
+* 支持上传餐桌照片，形成家庭的美食回忆录。  
+* 系统会在菜谱中记录“上次食用时间”和“点单频率”，久而久之，系统将生成一份“家庭最爱菜品排行榜”。
+
+## **4\. 为什么选择 Lynx (铃可)？**
+
+与市面上的菜谱 App 或通用的待办事项软件相比，Lynx (铃可) 的优势在于**定制化**与**流程化**。
+
+1. **私有化部署**：数据完全掌握在自己手中，记录的是属于这个小家庭独一无二的口味偏好。  
+2. **生活流逻辑**：它不仅仅是存菜谱，而是管理“从点菜 \-\> 备货 \-\> 烹饪 \-\> 评价”的完整闭环。  
+3. **极致体验**：前端采用单页应用（SPA）设计逻辑，操作流畅，不仅实用，更让做饭这件事变得“酷”起来。  
+4. **权限分明**：利用 Filament Shield 实现严谨的权限隔离，大厨只能看后台，顾客只能看菜单，各司其职，界面清爽。
+
+## **5\. 结语**
+
+Lynx (铃可) 不仅仅是一行行代码构建的系统，它是技术宅对生活热爱的极致表达。它将琐碎的家务通过数字化手段重构，减少了沟通成本，增加了生活的确定性与仪式感。
+
+在这个系统里，每一次点击“提交订单”，都是对美好生活的期待；每一次点击“接单”，都是对爱与责任的承诺。
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
