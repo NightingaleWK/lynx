@@ -128,7 +128,7 @@ class OrderNow extends Page implements HasForms
     {
         if (empty($this->cart)) {
             \Filament\Notifications\Notification::make()
-                ->title('Cart is empty')
+                ->title(__('Cart is empty'))
                 ->warning()
                 ->send();
             return;
@@ -153,7 +153,7 @@ class OrderNow extends Page implements HasForms
         }
 
         \Filament\Notifications\Notification::make()
-            ->title('Order placed successfully!')
+            ->title(__('Order placed successfully!'))
             ->success()
             ->send();
 

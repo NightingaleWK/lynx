@@ -247,5 +247,7 @@
     "Generate Shopping List": "生成购物清单",
     "Pending": "待处理",
     "Served": "已上菜",
-    "Completed": "已完成"
+    "Completed": "已完成",
+    "Cart is empty": "餐盘是空的",
+    "Order placed successfully!": "下单成功！"
 }
