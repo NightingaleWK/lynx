@@ -55,7 +55,6 @@ erDiagram
         timestamp last\_eaten\_at "上次食用时间 (冗余字段)"  
         int frequency "点单次数 (冗余字段)"  
         %% Tags 使用 spatie/laravel-tags  
-        %% Images 使用 spatie/laravel-medialibrary  
     }
 
     %% 核心关联：双轨制食材记录  
@@ -779,7 +778,7 @@ Authenticate before testing panel functionality. Filament uses Livewire, so use 
 
 **Commonly Incorrect Namespaces:**
 - Form fields (TextInput, Select, etc.): `Filament\Forms\Components\`
-- Infolist entries (for read-only views) (TextEntry, IconEntry, etc.): `Filament\Forms\Components\`
+- Infolist entries (for read-only views) (TextEntry, IconEntry, etc.): `Filament\Infolists\Components\`
 - Layout components (Grid, Section, Fieldset, Tabs, Wizard, etc.): `Filament\Schemas\Components\`
 - Schema utilities (Get, Set, etc.): `Filament\Schemas\Components\Utilities\`
 - Actions: `Filament\Actions\` (no `Filament\Tables\Actions\` etc.)
