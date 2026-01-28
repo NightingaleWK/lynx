@@ -64,17 +64,16 @@ class AdminPanelProvider extends PanelProvider
                     ->navigationGroup(NavigationGroup::System),
                 FilamentDeveloperLoginsPlugin::make()
                     ->enabled(app()->environment('local'))
-                    ->users(fn() => User::pluck('email', 'name')->toArray())
-                    ->switchable(fn() => Auth::user()->id === 1),
+                    ->users(fn () => User::pluck('email', 'name')->toArray())
+                    ->switchable(fn () => Auth::user()->id === 1),
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
             ->databaseNotifications()
-            ->sidebarCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop();
 
-            //
-        ;
+        //
     }
 }

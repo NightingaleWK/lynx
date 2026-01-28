@@ -10,10 +10,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class OrdersTable
 {
@@ -27,7 +27,7 @@ class OrdersTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
                         'processing' => 'warning',
                         'served' => 'info',
@@ -39,7 +39,7 @@ class OrdersTable
                     ->date()
                     ->sortable(),
                 TextColumn::make('meal_period')
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->searchable(),
                 TextColumn::make('items_count')
                     ->counts('items')
@@ -84,7 +84,7 @@ class OrdersTable
                                 $record->update(['status' => $nextStatus]);
                             }
                         })
-                        ->visible(fn(Order $record) => in_array($record->status, ['pending', 'processing', 'served']) && auth()->user()->can('update_order')),
+                        ->visible(fn (Order $record) => in_array($record->status, ['pending', 'processing', 'served']) && auth()->user()->can('update_order')),
                 ]),
             ])
             ->toolbarActions([
@@ -93,7 +93,7 @@ class OrdersTable
                     BulkAction::make('shopping_list')
                         ->label(__('Generate Shopping List'))
                         ->icon('heroicon-o-shopping-cart')
-                        ->action(fn(Collection $records) => redirect()->route('filament.admin.pages.shopping-list', ['orders' => $records->pluck('id')->implode(',')]))
+                        ->action(fn (Collection $records) => redirect()->route('filament.admin.pages.shopping-list', ['orders' => $records->pluck('id')->implode(',')]))
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ])

@@ -2,10 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\IngredientUnit;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use App\Enums\IngredientUnit;
 
 class ShoppingList extends Page
 {

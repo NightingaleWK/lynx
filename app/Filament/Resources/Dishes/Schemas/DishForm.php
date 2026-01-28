@@ -9,14 +9,12 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Alignment;
 
 class DishForm
 {
@@ -49,7 +47,6 @@ class DishForm
                                         Textarea::make('description')
                                             ->columnSpanFull(),
 
-
                                         DateTimePicker::make('last_eaten_at')
                                             ->displayFormat('Y-m-d H:i:s')
                                             ->native(false),
@@ -78,7 +75,7 @@ class DishForm
                                             ->maxFiles(5)
                                             ->panelLayout('grid')
                                             ->helperText('最多上传 5 张图片，建议尺寸 800x600'),
-                                    ])
+                                    ]),
                             ]),
                         Tab::make('菜谱')
                             ->schema([
@@ -99,7 +96,7 @@ class DishForm
                                             'table',
                                             // 'attachFiles',
                                             'undo',
-                                            'redo'
+                                            'redo',
                                         ],
                                     ]),
                             ]),

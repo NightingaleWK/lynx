@@ -45,20 +45,22 @@ class IngredientSeeder extends Seeder
             ['name' => '香油', 'base_unit' => 'ml', 'aisle' => '粮油调味'],
             ['name' => '米醋', 'base_unit' => 'ml', 'aisle' => '粮油调味'],
 
-            // 主食 ingredient? 
+            // 主食 ingredient?
             ['name' => '大米', 'base_unit' => 'g', 'aisle' => '粮油调味'],
             ['name' => '面条', 'base_unit' => 'g', 'aisle' => '粮油调味'],
         ];
 
         foreach ($ingredients as $data) {
             $aisleName = $data['aisle'];
-            if (!isset($aisles[$aisleName])) continue;
+            if (! isset($aisles[$aisleName])) {
+                continue;
+            }
 
             Ingredient::firstOrCreate(
                 ['name' => $data['name']],
                 [
                     'base_unit' => $data['base_unit'],
-                    'aisle_id' => $aisles[$aisleName]
+                    'aisle_id' => $aisles[$aisleName],
                 ]
             );
         }

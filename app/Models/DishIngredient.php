@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class DishIngredient extends Pivot
 {
     protected $guarded = [];
+
     protected $table = 'dish_ingredients';
 
     public function dish()

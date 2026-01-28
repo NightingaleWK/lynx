@@ -11,11 +11,8 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Enums\FiltersLayout;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use STS\FilamentImpersonate\Actions\Impersonate;
 
 class UsersTable
 {
@@ -67,7 +64,7 @@ class UsersTable
                             ->success()
                             ->send();
                     })
-                    ->visible(fn() => Auth::user()->can('ChangePassword:User')),
+                    ->visible(fn () => Auth::user()->can('ChangePassword:User')),
 
                 ViewAction::make(),
                 EditAction::make(),

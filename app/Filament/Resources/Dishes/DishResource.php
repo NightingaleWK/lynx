@@ -13,7 +13,6 @@ use App\Filament\Resources\Dishes\Schemas\DishInfolist;
 use App\Filament\Resources\Dishes\Tables\DishesTable;
 use App\Models\Dish;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;

@@ -14,9 +14,9 @@ class DishSeeder extends Seeder
         $categories = Category::pluck('id', 'name');
 
         // Helper to get ingredient ID
-        $ing = fn($name) => Ingredient::where('name', $name)->first()?->id;
+        $ing = fn ($name) => Ingredient::where('name', $name)->first()?->id;
 
-        $recipe_tomato_scrambled_eggs = <<<EOT
+        $recipe_tomato_scrambled_eggs = <<<'EOT'
 ## 🍅 家常西红柿炒鸡蛋
 
 ### 🛒 准备食材
@@ -104,7 +104,7 @@ EOT;
                     ['name' => '盐', 'qty' => 3, 'unit' => 'g', 'remark' => '少许'],
                     ['name' => '大葱', 'qty' => 10, 'unit' => 'g', 'remark' => '葱花'],
                     ['name' => '白糖', 'qty' => 5, 'unit' => 'g', 'remark' => '提鲜'],
-                ]
+                ],
             ],
             [
                 'name' => '青椒土豆丝',
@@ -116,7 +116,7 @@ EOT;
                     ['name' => '大蒜', 'qty' => 2, 'unit' => 'pc', 'remark' => '2瓣'],
                     ['name' => '米醋', 'qty' => 15, 'unit' => 'ml', 'remark' => '1勺'],
                     ['name' => '盐', 'qty' => 3, 'unit' => 'g', 'remark' => '适量'],
-                ]
+                ],
             ],
             [
                 'name' => '红烧肉',
@@ -130,7 +130,7 @@ EOT;
                     ['name' => '老抽', 'qty' => 10, 'unit' => 'ml', 'remark' => '半勺'],
                     ['name' => '料酒', 'qty' => 30, 'unit' => 'ml', 'remark' => '2勺'],
                     ['name' => '冰糖', 'qty' => 20, 'unit' => 'g', 'remark' => '一把'], // 假设有冰糖，或者用白糖代替
-                ]
+                ],
             ],
             [
                 'name' => '拍黄瓜',
@@ -142,7 +142,7 @@ EOT;
                     ['name' => '香油', 'qty' => 5, 'unit' => 'ml', 'remark' => '少许'],
                     ['name' => '米醋', 'qty' => 20, 'unit' => 'ml', 'remark' => '2勺'],
                     ['name' => '盐', 'qty' => 3, 'unit' => 'g', 'remark' => '适量'],
-                ]
+                ],
             ],
             [
                 'name' => '紫菜蛋花汤',
@@ -153,7 +153,7 @@ EOT;
                     ['name' => '香油', 'qty' => 3, 'unit' => 'ml', 'remark' => '几滴'],
                     ['name' => '盐', 'qty' => 2, 'unit' => 'g', 'remark' => '少许'],
                     // 紫菜缺省，暂不添加，或者在IngredientSeeder加一下
-                ]
+                ],
             ],
         ];
 
@@ -162,7 +162,9 @@ EOT;
 
         foreach ($dishes as $data) {
             $catName = $data['category'];
-            if (!isset($categories[$catName])) continue;
+            if (! isset($categories[$catName])) {
+                continue;
+            }
 
             $dish = Dish::firstOrCreate(
                 ['name' => $data['name']],
@@ -180,7 +182,9 @@ EOT;
                 $ingId = $ing($item['name']);
 
                 // Fallback logic
-                if (!$ingId && $item['name'] === '冰糖') $ingId = $sugarId;
+                if (! $ingId && $item['name'] === '冰糖') {
+                    $ingId = $sugarId;
+                }
 
                 if ($ingId) {
                     $syncData[$ingId] = [
@@ -191,7 +195,7 @@ EOT;
                 }
             }
 
-            if (!empty($syncData)) {
+            if (! empty($syncData)) {
                 $dish->ingredients()->sync($syncData);
             }
         }

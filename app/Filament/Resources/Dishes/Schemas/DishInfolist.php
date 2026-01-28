@@ -11,7 +11,6 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
-use Illuminate\Support\Facades\Storage;
 
 class DishInfolist
 {
@@ -31,7 +30,7 @@ class DishInfolist
                                 TextEntry::make('name')
                                     ->size(TextSize::Large)
                                     ->weight(FontWeight::Bold)
-                                    ->afterLabel(Schema::start(fn($record) => 'ID: ' . $record->id)),
+                                    ->afterLabel(Schema::start(fn ($record) => 'ID: '.$record->id)),
 
                                 TextEntry::make('category.name')
                                     ->label(__('dish.fields.category_id'))
@@ -86,20 +85,21 @@ class DishInfolist
                                 TableColumn::make(__('dish_ingredient.fields.ingredient_id'))
                                     ->markAsRequired(),
 
+                                TableColumn::make(__('dish_ingredient.fields.remark')),
+
                                 TableColumn::make(__('dish_ingredient.fields.quantity'))
                                     ->markAsRequired(),
 
                                 TableColumn::make(__('dish_ingredient.fields.unit'))
                                     ->markAsRequired(),
 
-                                TableColumn::make(__('dish_ingredient.fields.remark')),
                             ])
                             ->schema([
                                 TextEntry::make('ingredient.name'),
+                                TextEntry::make('remark'),
                                 TextEntry::make('quantity'),
                                 TextEntry::make('unit'),
-                                TextEntry::make('remark'),
-                            ])
+                            ]),
                     ]),
 
             ]);

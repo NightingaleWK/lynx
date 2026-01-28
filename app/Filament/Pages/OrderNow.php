@@ -3,18 +3,19 @@
 namespace App\Filament\Pages;
 
 use BackedEnum;
-use Filament\Pages\Page;
-use Filament\Support\Icons\Heroicon;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Pages\Page;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class OrderNow extends Page implements HasForms
 {
     use InteractsWithForms;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
 
     protected static ?string $navigationLabel = '点餐台';
@@ -34,6 +35,7 @@ class OrderNow extends Page implements HasForms
     }
 
     public $categoryId = null;
+
     public $search = '';
 
     // Cart: ['dish_id' => ['qty' => 1, 'notes' => 'less spicy']]
@@ -86,8 +88,8 @@ class OrderNow extends Page implements HasForms
     public function getDishesProperty()
     {
         return \App\Models\Dish::query()
-            ->when($this->categoryId, fn($q) => $q->where('category_id', $this->categoryId))
-            ->when($this->search, fn($q) => $q->where('name', 'like', '%' . $this->search . '%'))
+            ->when($this->categoryId, fn ($q) => $q->where('category_id', $this->categoryId))
+            ->when($this->search, fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))
             ->get();
     }
 
@@ -115,7 +117,9 @@ class OrderNow extends Page implements HasForms
 
     public function updateQuantity($dishId, $delta)
     {
-        if (! isset($this->cart[$dishId])) return;
+        if (! isset($this->cart[$dishId])) {
+            return;
+        }
 
         $this->cart[$dishId]['qty'] += $delta;
 
@@ -131,6 +135,7 @@ class OrderNow extends Page implements HasForms
                 ->title(__('Cart is empty'))
                 ->warning()
                 ->send();
+
             return;
         }
 
