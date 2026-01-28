@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Dishes\Schemas;
 use App\Models\Ingredient;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
@@ -80,7 +81,28 @@ class DishForm
                                     ])
                             ]),
                         Tab::make('菜谱')
-                            ->schema([]),
+                            ->schema([
+                                MarkdownEditor::make('recipe')
+                                    ->required()
+                                    ->columnSpanFull()
+                                    ->toolbarButtons([
+                                        [
+                                            'bold',
+                                            'italic',
+                                            'strike',
+                                            'link',
+                                            'heading',
+                                            'blockquote',
+                                            'codeBlock',
+                                            'bulletList',
+                                            'orderedList',
+                                            'table',
+                                            // 'attachFiles',
+                                            'undo',
+                                            'redo'
+                                        ],
+                                    ]),
+                            ]),
                         Tab::make('所需食材')
                             ->schema([
                                 Repeater::make('dishIngredients')
@@ -127,18 +149,6 @@ class DishForm
                                     ->columnSpanFull(),
                             ]),
                     ]),
-
-
-
-
-
-
-
-
-
-
-
-
             ]);
     }
 }

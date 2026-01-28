@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->comment('分类ID');
             $table->string('name')->comment('菜品名称');
             $table->text('description')->nullable()->comment('菜品描述');
+            $table->longText('recipe')->nullable()->comment('菜谱');
             $table->timestamp('last_eaten_at')->nullable()->comment('上次食用时间');
             $table->integer('frequency')->default(0)->comment('食用频次');
             $table->json('images')->nullable()->comment('菜品图片');

@@ -6,6 +6,7 @@ return [
         'category_id' => '分类ID',
         'name' => '菜品名称',
         'description' => '菜品描述',
+        'recipe' => '菜谱',
         'last_eaten_at' => '上次食用时间',
         'frequency' => '食用频次',
         'images' => '图片',

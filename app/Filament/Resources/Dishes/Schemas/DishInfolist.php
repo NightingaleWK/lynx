@@ -64,13 +64,18 @@ class DishInfolist
                                     ->disk('public')
                                     ->imageSize(100)
                                     ->square()
-                                    ->columnSpan(2),
+                                    ->columnSpan(2)
+                                    ->placeholder('暂无图片，完善后预览体验更佳哦！'),
                             ]),
                     ]),
 
                 Fieldset::make('菜谱信息')
                     ->columns(1)
-                    ->schema([]),
+                    ->schema([
+                        TextEntry::make('recipe')
+                            ->columnSpanFull()
+                            ->markdown(),
+                    ]),
 
                 Fieldset::make('所需食材')
                     ->columns(1)
